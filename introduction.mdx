@@ -3,76 +3,88 @@ title: Introduction
 description: "Welcome to the Splose API documentation. Splose serves as a comprehensive Allied Health & NDIS practice management software designed to streamline administrative tasks and foster the growth of your practice."
 ---
 
-The Splose API follows a REST architectural style, offering JSON-encoded responses, standard HTTP response codes, easily understandable resource-oriented URLs, and robust authentication mechanisms.
+    The Splose API follows a REST architectural style, offering JSON-encoded responses, standard HTTP response codes, easily understandable resource-oriented URLs, and robust authentication mechanisms.
 
-# Authentication
 
-### API Key Authentication
+    # Authentication
 
-The Splose API employs API keys for request authentication. Workspace owners can apply for and manage API keys through the Splose dashboard. It's crucial to safeguard the API key, as it grants the same permissions as the associated user.
+    ### API Key Authentication
 
-### Bearer Authentication
+    The Splose API employs API keys for request authentication. Workspace owners can apply for and manage API keys through the Splose dashboard. It's crucial to safeguard the API key, as it grants the same permissions as the associated user.
 
-Authentication for API access is achieved via Bearer Authentication. Include the API key in the request header using the format: `Authorization: Bearer your_api_key`.
 
-### Secure Communication
+    ### Bearer Authentication
 
-All API requests must be conducted over HTTPS. Requests made over plain HTTP will not succeed. Additionally, unauthenticated API requests will result in failure.
+    Authentication for API access is achieved via Bearer Authentication. Include the API key in the request header using the format: `Authorization: Bearer your_api_key`.
 
-# Rate limit
 
-There are limits to the number of API calls that your application can make with one API key.
+    ### Secure Communication
 
-- Minute Limit: 60 calls per minute
+    All API requests must be conducted over HTTPS. Requests made over plain HTTP will not succeed. Additionally, unauthenticated API requests will result in failure.
 
-# Error
 
-Splose uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the 2xx range indicate success.
+    # Rate limit
 
-Codes in the 4xx range indicate an error that failed given the information provided. Codes in the 5xx range indicate an error with Splose's servers.
+    There are limits to the number of API calls that your application can make with one API key.
 
-Error types:
 
-- 400 - Bad request: the request failed due to missing or invalid parameters.
+    + Minute Limit: 60 calls per minute
 
-- 401 - Unauthorized: No valid API key provided.
 
-- 404 - Not Found: The requested resource doesn't exist.
+    # Error
 
-- 429 - Too Many Requests: Too many requests hit the API too quickly.
+    Splose uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the 2xx range indicate success.
 
-- 500 - Internal Server Error : Something went wrong on Splose's end.
+    Codes in the 4xx range indicate an error that failed given the information provided. Codes in the 5xx range indicate an error with Splose's servers.
 
-# Datetime
 
-All datetime values provided in request parameters and responses are in Coordinated Universal Time (UTC). The accepted datetime formats are outlined below:
+    Error types:
 
-- 2023-07-01
+    + 400 - Bad request: the request failed due to missing or invalid parameters.
 
-- 2023-07-01T00:00:00Z
+    + 401 - Unauthorized: No valid API key provided.
 
-- 2023-07-01T00:00:00.000Z
+    + 404 - Not Found: 	The requested resource doesn't exist.
 
-# Pagination
+    + 429 - Too Many Requests: Too many requests hit the API too quickly.
 
-### Pagination for Multiple Objects
+    + 500 - Internal Server Error : Something went wrong on Splose's end.
 
-For endpoints returning multiple objects, pagination is in place to manage response sizes. Each response is limited to a certain number of objects.
 
-Additionally, the response includes a `links` field that provides URLs for fetching the next and/or previous pages, if applicable.
+    # Datetime
 
-### Manual Positioning
+    All datetime values provided in request parameters and responses are in Coordinated Universal Time (UTC). The accepted datetime formats are outlined below:
 
-You have the option to manually specify the `id_gt` or `id_lt` value as a request parameter. This allows you to retrieve objects starting from a specific position. If neither of these values is provided, the initial page of objects will be returned by default.
+    + 2023-07-01
 
-- `id_gt`: Request for next page of objects with id greater than the specified value.
+    + 2023-07-01T00:00:00Z
 
-- `id_lt`: Request for previous page of objects with id less than the specified value.
+    + 2023-07-01T00:00:00.000Z
 
-# Realtime feed
 
-Certain users may require real-time data retrieval. Given the substantial data volume, retrieving the complete dataset may not be efficient. To address this, we offer the option to retrieve data based on its update timestamp. This approach necessitates fetching the entire dataset only during the initial request. Subsequent retrievals involve fetching solely the modified data to replace outdated information.
+    # Pagination
 
-- `update_gt`: Request for objects updated after the specified datetime.
 
-- `update_lt`: Request for objects updated before the specified datetime.
+    ### Pagination for Multiple Objects
+
+    For endpoints returning multiple objects, pagination is in place to manage response sizes. Each response is limited to a certain number of objects.
+
+    Additionally, the response includes a `links` field that provides URLs for fetching the next and/or previous pages, if applicable.
+
+
+    ### Manual Positioning
+
+    You have the option to manually specify the `id_gt` or `id_lt` value as a request parameter. This allows you to retrieve objects starting from a specific position. If neither of these values is provided, the initial page of objects will be returned by default.
+
+    + `id_gt`: Request for next page of objects with id greater than the specified value.
+
+    + `id_lt`: Request for previous page of objects with id less than the specified value.
+
+
+    # Realtime feed
+
+    Certain users may require real-time data retrieval. Given the substantial data volume, retrieving the complete dataset may not be efficient. To address this, we offer the option to retrieve data based on its update timestamp. This approach necessitates fetching the entire dataset only during the initial request. Subsequent retrievals involve fetching solely the modified data to replace outdated information.
+
+    + `update_gt`: Request for objects updated after the specified datetime.
+
+    + `update_lt`: Request for objects updated before the specified datetime.
