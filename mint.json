@@ -99,7 +99,7 @@
     }
   ],
   "api": {
-    "baseUrl": "https://api.splose.com/",
+    "baseUrl": "https://api.splose.com",
     "auth": {
       "method": "bearer"
     },
