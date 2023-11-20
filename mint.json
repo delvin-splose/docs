@@ -1,11 +1,12 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Splose API Documentation",
   "logo": {
     "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "light": "/logo/light.svg",
+    "href": "https://splose.com"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/logo/favicon.png",
   "colors": {
     "primary": "#0D9373",
     "light": "#07C983",
@@ -15,64 +16,98 @@
       "to": "#07C983"
     }
   },
-  "topbarLinks": [
-    {
-      "name": "Support",
-      "url": "mailto:hi@mintlify.com"
-    }
-  ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "url": "https://splose.com/login"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
   "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
     {
       "name": "Blog",
       "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "url": "https://splose.com/blog"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["introduction"]
     },
     {
-      "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
-    },
-    {
-      "group": "API Documentation",
-      "pages": ["api-reference/introduction"]
-    },
-    {
-      "group": "Endpoint Examples",
+      "group": "API Reference",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        {
+          "group": "Patient",
+          "pages": [
+            "api-reference/endpoints/patient/get-a-paged-array-of-patients",
+            "api-reference/endpoints/patient/get-a-single-patient"
+          ]
+        },
+        {
+          "group": "Service",
+          "pages": [
+            "api-reference/endpoints/service/get-a-paged-array-of-services",
+            "api-reference/endpoints/service/get-a-single-service"
+          ]
+        },
+        {
+          "group": "Location",
+          "pages": [
+            "api-reference/endpoints/location/get-a-paged-array-of-locations",
+            "api-reference/endpoints/location/get-a-single-location"
+          ]
+        },
+        {
+          "group": "Practitioner",
+          "pages": [
+            "api-reference/endpoints/practitioner/get-a-paged-array-of-practitioners",
+            "api-reference/endpoints/practitioner/get-a-single-practitioner"
+          ]
+        },
+        {
+          "group": "Appointment",
+          "pages": [
+            "api-reference/endpoints/appointment/get-a-paged-array-of-appointments",
+            "api-reference/endpoints/appointment/get-a-single-appointment"
+          ]
+        },
+        {
+          "group": "Support activity",
+          "pages": [
+            "api-reference/endpoints/support-activity/get-a-paged-array-of-support-activities",
+            "api-reference/endpoints/support-activity/get-a-single-support-activity"
+          ]
+        },
+        {
+          "group": "Support item",
+          "pages": [
+            "api-reference/endpoints/support-item/get-a-paged-array-of-support-items",
+            "api-reference/endpoints/support-item/get-a-single-support-item"
+          ]
+        },
+        {
+          "group": "Invoice",
+          "pages": [
+            "api-reference/endpoints/invoice/get-a-paged-array-of-invoices",
+            "api-reference/endpoints/invoice/get-a-single-invoice"
+          ]
+        }
       ]
     }
   ],
+  "api": {
+    "baseUrl": "https://api.splose.com/",
+    "auth": {
+      "method": "bearer"
+    }
+  },
+  "openapi": ["openapi-docs.yml"],
   "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "twitter": "https://twitter.com/splose",
+    "linkedin": "https://linkedin.com/company/splose",
+    "facebook": "https://facebook.com/splose",
+    "instagram": "https://instagram.com/splose"
+  },
+  "integrations": {
+    "intercom": "jm8wlq1m"
   }
 }

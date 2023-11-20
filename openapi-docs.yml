@@ -1,0 +1,3518 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Splose public API
+  description: >
+    
+    Welcome to the Splose API documentation. Splose serves as a comprehensive Allied Health & NDIS practice management software designed to streamline administrative tasks and foster the growth of your practice.
+
+
+    # Introduction
+
+    The Splose API follows a REST architectural style, offering JSON-encoded responses, standard HTTP response codes, easily understandable resource-oriented URLs, and robust authentication mechanisms.
+
+
+    # Authentication
+
+    ### API Key Authentication
+
+    The Splose API employs API keys for request authentication. Workspace owners can apply for and manage API keys through the Splose dashboard. It's crucial to safeguard the API key, as it grants the same permissions as the associated user.
+
+
+    ### Bearer Authentication
+
+    Authentication for API access is achieved via Bearer Authentication. Include the API key in the request header using the format: `Authorization: Bearer your_api_key`.
+
+
+    ### Secure Communication
+
+    All API requests must be conducted over HTTPS. Requests made over plain HTTP will not succeed. Additionally, unauthenticated API requests will result in failure.
+
+
+    # Rate limit
+
+    There are limits to the number of API calls that your application can make with one API key.
+
+
+    + Minute Limit: 60 calls per minute
+
+
+    # Error
+
+    Splose uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the 2xx range indicate success. 
+
+    Codes in the 4xx range indicate an error that failed given the information provided. Codes in the 5xx range indicate an error with Splose's servers.
+
+
+    Error types:
+
+    + 400 - Bad request: the request failed due to missing or invalid parameters.
+
+    + 401 - Unauthorized: No valid API key provided.
+
+    + 404 - Not Found: 	The requested resource doesn't exist.
+
+    + 429 - Too Many Requests: Too many requests hit the API too quickly.
+
+    + 500 - Internal Server Error : Something went wrong on Splose's end.
+
+
+    # Datetime
+
+    All datetime values provided in request parameters and responses are in Coordinated Universal Time (UTC). The accepted datetime formats are outlined below:
+
+    + 2023-07-01
+
+    + 2023-07-01T00:00:00Z
+
+    + 2023-07-01T00:00:00.000Z
+
+
+    # Pagination
+
+
+    ### Pagination for Multiple Objects
+
+    For endpoints returning multiple objects, pagination is in place to manage response sizes. Each response is limited to a certain number of objects. 
+
+    Additionally, the response includes a `links` field that provides URLs for fetching the next and/or previous pages, if applicable.
+
+
+    ### Manual Positioning
+
+    You have the option to manually specify the `id_gt` or `id_lt` value as a request parameter. This allows you to retrieve objects starting from a specific position. If neither of these values is provided, the initial page of objects will be returned by default.
+
+    + `id_gt`: Request for next page of objects with id greater than the specified value. 
+
+    + `id_lt`: Request for previous page of objects with id less than the specified value. 
+
+
+    # Realtime feed
+
+    Certain users may require real-time data retrieval. Given the substantial data volume, retrieving the complete dataset may not be efficient. To address this, we offer the option to retrieve data based on its update timestamp. This approach necessitates fetching the entire dataset only during the initial request. Subsequent retrievals involve fetching solely the modified data to replace outdated information.
+
+    + `update_gt`: Request for objects updated after the specified datetime. 
+
+    + `update_lt`: Request for objects updated before the specified datetime. 
+  contact:
+    email: support@splose.com
+externalDocs:
+  description: Find out more about Splose
+  url: https://splose.com
+servers:
+  - url: https://api.splose.com/v1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas: {}
+  parameters: {}
+paths:
+  /patients:
+    get:
+      tags:
+        - patient
+      description: Get a paged array of patients
+      summary: Get a paged array of patients
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: &a4
+              - "true"
+              - "false"
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Patient firstname
+            example: Harry
+          required: false
+          name: firstname
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Patient lastname
+            example: Potter
+          required: false
+          name: lastname
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            format: email
+            description: Patient email
+            example: harry@hogwarts.edu
+          required: false
+          name: email
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Patient birth date in YYYY-MM-DD format
+            example: 1990-01-01
+          required: false
+          name: birthdate
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Patient phone number without country code
+            example: "0412345678"
+          required: false
+          name: phoneNumber
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Patient tag
+            example: Self-managed
+          required: false
+          name: patientTag
+          in: query
+      responses:
+        "200":
+          description: A paged array of patients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient Id
+                          example: 1
+                        firstname:
+                          type: string
+                          description: Patient first name
+                          example: Harry
+                        lastname:
+                          type: string
+                          description: Patient last name
+                          example: Potter
+                        middleName:
+                          type: string
+                          nullable: true
+                          description: Patient middle name
+                          example: James
+                        preferredName:
+                          type: string
+                          nullable: true
+                          description: Patient preferred name
+                          example: Harry
+                        title:
+                          type: string
+                          nullable: true
+                          description: Patient title
+                          example: Mr.
+                        email:
+                          type: string
+                          nullable: true
+                          description: Patient email
+                          example: harry@hogwarts.edu
+                        sex:
+                          type: string
+                          nullable: true
+                          description: Patient sex
+                          example: Male
+                        genderIdentity:
+                          type: string
+                          nullable: true
+                          description: Patient gender identity
+                          example: Man
+                        pronouns:
+                          type: string
+                          nullable: true
+                          description: Patient pronouns
+                          example: They/them
+                        alert:
+                          type: string
+                          nullable: true
+                          description: Patient alert messages
+                          example: He knows magic
+                        birthdate:
+                          type: string
+                          nullable: true
+                          description: Patient birthdate in YYYY-MM-DD format
+                          example: 1996-07-30
+                        timezone:
+                          type: string
+                          nullable: true
+                          description: Patient timezone
+                          example: Australia/Adelaide
+                        extraInfo:
+                          type: string
+                          nullable: true
+                          description: Patient extra info
+                          example: Some extra info
+                        extraBillingInfo:
+                          type: string
+                          nullable: true
+                          description: Patient extra billing info
+                          example: Some extra billing info
+                        addressL1:
+                          type: string
+                          nullable: true
+                          description: Patient address line 1
+                          example: 123 King William Street
+                        addressL2:
+                          type: string
+                          nullable: true
+                          description: Patient address line 2
+                          example: ""
+                        addressL3:
+                          type: string
+                          nullable: true
+                          description: Patient address line 3
+                          example: ""
+                        city:
+                          type: string
+                          nullable: true
+                          description: Patient city
+                          example: Adelaide
+                        state:
+                          type: string
+                          nullable: true
+                          description: Patient state
+                          example: SA
+                        postalCode:
+                          type: string
+                          nullable: true
+                          description: Patient post code
+                          example: "5000"
+                        country:
+                          type: string
+                          nullable: true
+                          description: Patient country
+                          example: Australia
+                        phoneNumbers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                                nullable: true
+                                enum: &a1
+                                  - Mobile
+                                  - Home
+                                  - Work
+                                  - Fax
+                                  - Other
+                                description: Phone number type
+                                example: Mobile
+                              code:
+                                type: string
+                                nullable: true
+                                description: Phone country code
+                                example: "+61"
+                              phoneNumber:
+                                type: string
+                                description: Phone number
+                                example: "401234567"
+                            required:
+                              - type
+                              - code
+                              - phoneNumber
+                        privacyPolicy:
+                          type: string
+                          nullable: true
+                          enum: &a2
+                            - No response
+                            - Accepted
+                            - Rejected
+                          description: Patient privacy policy status
+                          example: Accepted
+                        healthFund:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              description: Health fund name
+                              example: AHM
+                            membershipNumber:
+                              type: string
+                              description: Health fund membership number
+                              example: "12345678"
+                            patientNumber:
+                              type: string
+                              description: Health fund patient number
+                              example: "1"
+                            cardIssueNumber:
+                              type: string
+                              description: Health fund card issue number
+                              example: "01"
+                          required:
+                            - name
+                        ndisNumber:
+                          type: string
+                          nullable: true
+                          description: Patient NDIS number
+                          example: "430123456"
+                        medicareNum:
+                          type: string
+                          nullable: true
+                          description: Patient Medicare number
+                          example: "4444444444"
+                        irn:
+                          type: string
+                          nullable: true
+                          description: Patient Medicare reference number
+                          example: "1"
+                        veteransFileNumber:
+                          type: string
+                          nullable: true
+                          description: Patient veterans information
+                          example: ""
+                        emergencyContactNumber:
+                          type: string
+                          nullable: true
+                          description: Patient emergency contact number
+                          example: "0412345678"
+                        emergencyContactName:
+                          type: string
+                          nullable: true
+                          description: Patient emergency contact name
+                          example: Quentin Neely
+                        emergencyContactRelationship:
+                          type: string
+                          nullable: true
+                          description: Patient emergency contact relationship
+                          example: Brother
+                        patientTags:
+                          type: array
+                          items:
+                            type: string
+                          description: Patient tags
+                          example: &a3
+                            - Self-managed
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the patient has been archived
+                        createdAt:
+                          type: string
+                          nullable: true
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          type: string
+                          nullable: true
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - firstname
+                        - lastname
+                        - middleName
+                        - preferredName
+                        - title
+                        - email
+                        - sex
+                        - genderIdentity
+                        - pronouns
+                        - alert
+                        - birthdate
+                        - timezone
+                        - extraInfo
+                        - extraBillingInfo
+                        - addressL1
+                        - addressL2
+                        - addressL3
+                        - city
+                        - state
+                        - postalCode
+                        - country
+                        - phoneNumbers
+                        - privacyPolicy
+                        - ndisNumber
+                        - medicareNum
+                        - irn
+                        - veteransFileNumber
+                        - emergencyContactNumber
+                        - emergencyContactName
+                        - emergencyContactRelationship
+                        - patientTags
+                        - createdAt
+                        - updatedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/patients/{id}":
+    get:
+      tags:
+        - patient
+      description: Get patient data by id
+      summary: Get a single patient
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with patient data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient Id
+                    example: 1
+                  firstname:
+                    type: string
+                    description: Patient first name
+                    example: Harry
+                  lastname:
+                    type: string
+                    description: Patient last name
+                    example: Potter
+                  middleName:
+                    type: string
+                    nullable: true
+                    description: Patient middle name
+                    example: James
+                  preferredName:
+                    type: string
+                    nullable: true
+                    description: Patient preferred name
+                    example: Harry
+                  title:
+                    type: string
+                    nullable: true
+                    description: Patient title
+                    example: Mr.
+                  email:
+                    type: string
+                    nullable: true
+                    description: Patient email
+                    example: harry@hogwarts.edu
+                  sex:
+                    type: string
+                    nullable: true
+                    description: Patient sex
+                    example: Male
+                  genderIdentity:
+                    type: string
+                    nullable: true
+                    description: Patient gender identity
+                    example: Man
+                  pronouns:
+                    type: string
+                    nullable: true
+                    description: Patient pronouns
+                    example: They/them
+                  alert:
+                    type: string
+                    nullable: true
+                    description: Patient alert messages
+                    example: He knows magic
+                  birthdate:
+                    type: string
+                    nullable: true
+                    description: Patient birthdate in YYYY-MM-DD format
+                    example: 1996-07-30
+                  timezone:
+                    type: string
+                    nullable: true
+                    description: Patient timezone
+                    example: Australia/Adelaide
+                  extraInfo:
+                    type: string
+                    nullable: true
+                    description: Patient extra info
+                    example: Some extra info
+                  extraBillingInfo:
+                    type: string
+                    nullable: true
+                    description: Patient extra billing info
+                    example: Some extra billing info
+                  addressL1:
+                    type: string
+                    nullable: true
+                    description: Patient address line 1
+                    example: 123 King William Street
+                  addressL2:
+                    type: string
+                    nullable: true
+                    description: Patient address line 2
+                    example: ""
+                  addressL3:
+                    type: string
+                    nullable: true
+                    description: Patient address line 3
+                    example: ""
+                  city:
+                    type: string
+                    nullable: true
+                    description: Patient city
+                    example: Adelaide
+                  state:
+                    type: string
+                    nullable: true
+                    description: Patient state
+                    example: SA
+                  postalCode:
+                    type: string
+                    nullable: true
+                    description: Patient post code
+                    example: "5000"
+                  country:
+                    type: string
+                    nullable: true
+                    description: Patient country
+                    example: Australia
+                  phoneNumbers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          nullable: true
+                          enum: *a1
+                          description: Phone number type
+                          example: Mobile
+                        code:
+                          type: string
+                          nullable: true
+                          description: Phone country code
+                          example: "+61"
+                        phoneNumber:
+                          type: string
+                          description: Phone number
+                          example: "401234567"
+                      required:
+                        - type
+                        - code
+                        - phoneNumber
+                  privacyPolicy:
+                    type: string
+                    nullable: true
+                    enum: *a2
+                    description: Patient privacy policy status
+                    example: Accepted
+                  healthFund:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Health fund name
+                        example: AHM
+                      membershipNumber:
+                        type: string
+                        description: Health fund membership number
+                        example: "12345678"
+                      patientNumber:
+                        type: string
+                        description: Health fund patient number
+                        example: "1"
+                      cardIssueNumber:
+                        type: string
+                        description: Health fund card issue number
+                        example: "01"
+                    required:
+                      - name
+                  ndisNumber:
+                    type: string
+                    nullable: true
+                    description: Patient NDIS number
+                    example: "430123456"
+                  medicareNum:
+                    type: string
+                    nullable: true
+                    description: Patient Medicare number
+                    example: "4444444444"
+                  irn:
+                    type: string
+                    nullable: true
+                    description: Patient Medicare reference number
+                    example: "1"
+                  veteransFileNumber:
+                    type: string
+                    nullable: true
+                    description: Patient veterans information
+                    example: ""
+                  emergencyContactNumber:
+                    type: string
+                    nullable: true
+                    description: Patient emergency contact number
+                    example: "0412345678"
+                  emergencyContactName:
+                    type: string
+                    nullable: true
+                    description: Patient emergency contact name
+                    example: Quentin Neely
+                  emergencyContactRelationship:
+                    type: string
+                    nullable: true
+                    description: Patient emergency contact relationship
+                    example: Brother
+                  patientTags:
+                    type: array
+                    items:
+                      type: string
+                    description: Patient tags
+                    example: *a3
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the patient has been archived
+                  createdAt:
+                    type: string
+                    nullable: true
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    type: string
+                    nullable: true
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - firstname
+                  - lastname
+                  - middleName
+                  - preferredName
+                  - title
+                  - email
+                  - sex
+                  - genderIdentity
+                  - pronouns
+                  - alert
+                  - birthdate
+                  - timezone
+                  - extraInfo
+                  - extraBillingInfo
+                  - addressL1
+                  - addressL2
+                  - addressL3
+                  - city
+                  - state
+                  - postalCode
+                  - country
+                  - phoneNumbers
+                  - privacyPolicy
+                  - ndisNumber
+                  - medicareNum
+                  - irn
+                  - veteransFileNumber
+                  - emergencyContactNumber
+                  - emergencyContactName
+                  - emergencyContactRelationship
+                  - patientTags
+                  - createdAt
+                  - updatedAt
+  /services:
+    get:
+      tags:
+        - service
+      description: Get a paged array of services
+      summary: Get a paged array of services
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Service name
+            example: Initial Consultation
+          required: false
+          name: name
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Service type
+            example: Other
+          required: false
+          name: type
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Service code
+            example: ABC123
+          required: false
+          name: code
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Service tag
+            example: NDIS
+          required: false
+          name: serviceTag
+          in: query
+      responses:
+        "200":
+          description: A paged array of services
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Service id
+                          example: 1
+                        for:
+                          type: string
+                          enum: &a5
+                            - appointment
+                            - support activity
+                          description: The service is used for
+                          example: appointment
+                        name:
+                          type: string
+                          description: Service name
+                          example: Initial Consultation
+                        description:
+                          type: string
+                          nullable: true
+                          description: Service description
+                          example: This is a sample service
+                        type:
+                          type: string
+                          nullable: true
+                          description: Service type
+                          example: Other
+                        code:
+                          type: string
+                          nullable: true
+                          description: Service code
+                          example: ABC123
+                        duration:
+                          type: number
+                          nullable: true
+                          description: Service duration in minute
+                          example: 90
+                        unit:
+                          type: string
+                          nullable: true
+                          enum: &a6
+                            - Hour
+                            - Each
+                          description: Service unit
+                          example: Hour
+                        pricing:
+                          type: number
+                          nullable: true
+                          description: Service unit price in dollar
+                          example: 193.99
+                        taxType:
+                          anyOf:
+                            - type: string
+                              enum: &a7
+                                - STANDARD
+                                - ZERO
+                                - EXEMPT
+                                - REDUCED
+                            - type: string
+                            - nullable: true
+                          description: Tax type, check Splose support for more info
+                          example: STANDARD
+                        allowProviderTravel:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether provider travel is enabled
+                        providerTravelItemCode:
+                          type: string
+                          nullable: true
+                          description: Provider travel item code
+                          example: ""
+                        providerTravelPricing:
+                          type: number
+                          nullable: true
+                          description: Provider travel item pricing
+                          example: 0
+                        allowProviderTravelNonLabourCosts:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether provider travel non labour cost is enabled
+                        providerTravelNonLabourCostsItemCode:
+                          type: string
+                          nullable: true
+                          description: Provider travel non labour cost item code
+                          example: ""
+                        providerTravelNonLabourCostsPricing:
+                          type: number
+                          nullable: true
+                          description: Provider travel non labour cost item pricing
+                          example: 0
+                        serviceTags:
+                          type: array
+                          items:
+                            type: string
+                          description: Service tags
+                          example: &a8
+                            - NDIS
+                        createdAt:
+                          type: string
+                          nullable: true
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          type: string
+                          nullable: true
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          type: string
+                          nullable: true
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - for
+                        - name
+                        - description
+                        - type
+                        - code
+                        - duration
+                        - unit
+                        - pricing
+                        - taxType
+                        - providerTravelItemCode
+                        - providerTravelPricing
+                        - providerTravelNonLabourCostsItemCode
+                        - providerTravelNonLabourCostsPricing
+                        - serviceTags
+                        - createdAt
+                        - updatedAt
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/services/{id}":
+    get:
+      tags:
+        - service
+      description: Get service data by id
+      summary: Get a single service
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with service data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Service id
+                    example: 1
+                  for:
+                    type: string
+                    enum: *a5
+                    description: The service is used for
+                    example: appointment
+                  name:
+                    type: string
+                    description: Service name
+                    example: Initial Consultation
+                  description:
+                    type: string
+                    nullable: true
+                    description: Service description
+                    example: This is a sample service
+                  type:
+                    type: string
+                    nullable: true
+                    description: Service type
+                    example: Other
+                  code:
+                    type: string
+                    nullable: true
+                    description: Service code
+                    example: ABC123
+                  duration:
+                    type: number
+                    nullable: true
+                    description: Service duration in minute
+                    example: 90
+                  unit:
+                    type: string
+                    nullable: true
+                    enum: *a6
+                    description: Service unit
+                    example: Hour
+                  pricing:
+                    type: number
+                    nullable: true
+                    description: Service unit price in dollar
+                    example: 193.99
+                  taxType:
+                    anyOf:
+                      - type: string
+                        enum: *a7
+                      - type: string
+                      - nullable: true
+                    description: Tax type, check Splose support for more info
+                    example: STANDARD
+                  allowProviderTravel:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether provider travel is enabled
+                  providerTravelItemCode:
+                    type: string
+                    nullable: true
+                    description: Provider travel item code
+                    example: ""
+                  providerTravelPricing:
+                    type: number
+                    nullable: true
+                    description: Provider travel item pricing
+                    example: 0
+                  allowProviderTravelNonLabourCosts:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether provider travel non labour cost is enabled
+                  providerTravelNonLabourCostsItemCode:
+                    type: string
+                    nullable: true
+                    description: Provider travel non labour cost item code
+                    example: ""
+                  providerTravelNonLabourCostsPricing:
+                    type: number
+                    nullable: true
+                    description: Provider travel non labour cost item pricing
+                    example: 0
+                  serviceTags:
+                    type: array
+                    items:
+                      type: string
+                    description: Service tags
+                    example: *a8
+                  createdAt:
+                    type: string
+                    nullable: true
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    type: string
+                    nullable: true
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    type: string
+                    nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - for
+                  - name
+                  - description
+                  - type
+                  - code
+                  - duration
+                  - unit
+                  - pricing
+                  - taxType
+                  - providerTravelItemCode
+                  - providerTravelPricing
+                  - providerTravelNonLabourCostsItemCode
+                  - providerTravelNonLabourCostsPricing
+                  - serviceTags
+                  - createdAt
+                  - updatedAt
+                  - deletedAt
+  /locations:
+    get:
+      tags:
+        - location
+      description: Get a paged array of locations
+      summary: Get a paged array of locations
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Location title
+            example: Rainbow Therapy
+          required: false
+          name: title
+          in: query
+      responses:
+        "200":
+          description: A paged array of locations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Location id
+                          example: 1
+                        title:
+                          type: string
+                          description: Location title
+                          example: Rainbow Therapy
+                        abn:
+                          type: string
+                          nullable: true
+                          description: Business number
+                          example: "12345678"
+                        address:
+                          type: string
+                          nullable: true
+                          description: Business number
+                          example: "12345678"
+                        postalCode:
+                          type: string
+                          nullable: true
+                          description: Location post code
+                          example: "5000"
+                        suburb:
+                          type: string
+                          nullable: true
+                          description: Location suburb
+                          example: Adelaide
+                        state:
+                          type: string
+                          nullable: true
+                          description: Location state
+                          example: SA
+                        country:
+                          type: string
+                          nullable: true
+                          description: Location country
+                          example: Australia
+                        phone:
+                          type: string
+                          nullable: true
+                          description: Location phone number
+                          example: "0412345678"
+                        email:
+                          type: string
+                          nullable: true
+                          description: Location email
+                          example: rainbow-therapy@splose.com
+                        onlineBooking:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether online booking is enabled
+                        timezone:
+                          type: string
+                          nullable: true
+                          description: Location timezone
+                          example: Australia/Adelaide
+                        createdAt:
+                          type: string
+                          nullable: true
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          type: string
+                          nullable: true
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          type: string
+                          nullable: true
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - title
+                        - abn
+                        - address
+                        - postalCode
+                        - suburb
+                        - state
+                        - country
+                        - phone
+                        - email
+                        - timezone
+                        - createdAt
+                        - updatedAt
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/locations/{id}":
+    get:
+      tags:
+        - location
+      description: Get location data by id
+      summary: Get a single location
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with location data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Location id
+                    example: 1
+                  title:
+                    type: string
+                    description: Location title
+                    example: Rainbow Therapy
+                  abn:
+                    type: string
+                    nullable: true
+                    description: Business number
+                    example: "12345678"
+                  address:
+                    type: string
+                    nullable: true
+                    description: Business number
+                    example: "12345678"
+                  postalCode:
+                    type: string
+                    nullable: true
+                    description: Location post code
+                    example: "5000"
+                  suburb:
+                    type: string
+                    nullable: true
+                    description: Location suburb
+                    example: Adelaide
+                  state:
+                    type: string
+                    nullable: true
+                    description: Location state
+                    example: SA
+                  country:
+                    type: string
+                    nullable: true
+                    description: Location country
+                    example: Australia
+                  phone:
+                    type: string
+                    nullable: true
+                    description: Location phone number
+                    example: "0412345678"
+                  email:
+                    type: string
+                    nullable: true
+                    description: Location email
+                    example: rainbow-therapy@splose.com
+                  onlineBooking:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether online booking is enabled
+                  timezone:
+                    type: string
+                    nullable: true
+                    description: Location timezone
+                    example: Australia/Adelaide
+                  createdAt:
+                    type: string
+                    nullable: true
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    type: string
+                    nullable: true
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    type: string
+                    nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - title
+                  - abn
+                  - address
+                  - postalCode
+                  - suburb
+                  - state
+                  - country
+                  - phone
+                  - email
+                  - timezone
+                  - createdAt
+                  - updatedAt
+                  - deletedAt
+  /practitioners:
+    get:
+      tags:
+        - practitioner
+      description: Get a paged array of practitioners
+      summary: Get a paged array of practitioners
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Practitioner first name
+            example: Albus
+          required: false
+          name: firstname
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Practitioner last name
+            example: Dumbledore
+          required: false
+          name: lastname
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Patient email
+            example: albus@hogwarts.edu
+          required: false
+          name: email
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum:
+              - "true"
+              - "false"
+            description: Whether the practitioner is active
+            example: true
+          required: false
+          name: isActive
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: &a9
+              - practitioner admin
+              - practitioner
+              - accountant
+              - practice manager
+              - receptionist
+            description: Practitioner role name
+            example: practitioner admin
+          required: false
+          name: roleName
+          in: query
+      responses:
+        "200":
+          description: A paged array of practitioners
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Practitioner id
+                          example: 1
+                        firstname:
+                          type: string
+                          description: Practitioner first name
+                          example: Albus
+                        lastname:
+                          type: string
+                          description: Practitioner last name
+                          example: Dumbledore
+                        title:
+                          type: string
+                          nullable: true
+                          description: Practitioner title
+                          example: Dr
+                        profession:
+                          type: string
+                          nullable: true
+                          description: Practitioner profession
+                          example: Physiotherapist
+                        isActive:
+                          type: boolean
+                          nullable: true
+                          default: true
+                          description: Whether the practitioner is active
+                        description:
+                          type: string
+                          nullable: true
+                          description: Practitioner description
+                          example: Practitioner admin of Hogwarts
+                        roleName:
+                          type: string
+                          enum: *a9
+                          description: Practitioner role name
+                          example: practitioner admin
+                        onlineBooking:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether online booking is enabled
+                        providerNumbers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                                description: Provider number type
+                                example: Medicare
+                              number:
+                                type: string
+                                description: Provider number
+                                example: "12345678"
+                              locationId:
+                                type: integer
+                                nullable: true
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: The location of this provider number
+                                example: 1
+                            required:
+                              - type
+                              - number
+                              - locationId
+                        createdAt:
+                          type: string
+                          nullable: true
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          type: string
+                          nullable: true
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          type: string
+                          nullable: true
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - firstname
+                        - lastname
+                        - title
+                        - profession
+                        - description
+                        - roleName
+                        - providerNumbers
+                        - createdAt
+                        - updatedAt
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/practitioners/{id}":
+    get:
+      tags:
+        - practitioner
+      description: Get practitioner data by id
+      summary: Get a single practitioner
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with practitioner data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Practitioner id
+                    example: 1
+                  firstname:
+                    type: string
+                    description: Practitioner first name
+                    example: Albus
+                  lastname:
+                    type: string
+                    description: Practitioner last name
+                    example: Dumbledore
+                  title:
+                    type: string
+                    nullable: true
+                    description: Practitioner title
+                    example: Dr
+                  profession:
+                    type: string
+                    nullable: true
+                    description: Practitioner profession
+                    example: Physiotherapist
+                  isActive:
+                    type: boolean
+                    nullable: true
+                    default: true
+                    description: Whether the practitioner is active
+                  description:
+                    type: string
+                    nullable: true
+                    description: Practitioner description
+                    example: Practitioner admin of Hogwarts
+                  roleName:
+                    type: string
+                    enum: *a9
+                    description: Practitioner role name
+                    example: practitioner admin
+                  onlineBooking:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether online booking is enabled
+                  providerNumbers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          description: Provider number type
+                          example: Medicare
+                        number:
+                          type: string
+                          description: Provider number
+                          example: "12345678"
+                        locationId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The location of this provider number
+                          example: 1
+                      required:
+                        - type
+                        - number
+                        - locationId
+                  createdAt:
+                    type: string
+                    nullable: true
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    type: string
+                    nullable: true
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    type: string
+                    nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - firstname
+                  - lastname
+                  - title
+                  - profession
+                  - description
+                  - roleName
+                  - providerNumbers
+                  - createdAt
+                  - updatedAt
+                  - deletedAt
+  /appointments:
+    get:
+      tags:
+        - appointment
+      description: Get a paged array of appointments
+      summary: Get a paged array of appointments
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: &a10
+              - Arrived
+              - Did not arrive
+              - Cancelled
+            description: Patient status of this appointment
+          required: false
+          name: status
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for appointments start after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: start_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for appointments start before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: start_lt
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for appointments with this patient id
+            example: 1
+          required: false
+          name: patientId
+          in: query
+      responses:
+        "200":
+          description: A paged array of appointments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Appointment id
+                          example: 1
+                        start:
+                          type: string
+                          nullable: true
+                          description: Appointment start date time
+                          example: 2023-07-30T09:00:00Z
+                        end:
+                          type: string
+                          nullable: true
+                          description: Appointment start date time
+                          example: 2023-07-30T09:00:00Z
+                        isUnavailableBlock:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                        serviceId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The service id of this appointment
+                          example: 1
+                        locationId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The location id of this appointment
+                          example: 1
+                        practitionerId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The practitioner id of this appointment
+                          example: 1
+                        maxPatients:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          default: 1
+                          description: The max patient number of this appointment. A number greater than 1
+                            indicates a group appointment.
+                        appointmentPatients:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              appointmentId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Appointment id
+                                example: 1
+                              patientId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Patient id
+                                example: 1
+                              status:
+                                type: string
+                                nullable: true
+                                enum: *a10
+                                description: Patient status of this appointment
+                              note:
+                                type: string
+                                nullable: true
+                                description: Note for the appointment patient
+                                example: Some notes
+                              doNotInvoice:
+                                type: boolean
+                                nullable: true
+                                default: false
+                                description: Whether this appointment patient will not be invoiced
+                              invoiceId:
+                                type: integer
+                                nullable: true
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Invoice id of this appointment patient
+                                example: 1
+                              cancellationReason:
+                                type: string
+                                nullable: true
+                                description: The cancellation reason if the appointment is cancelled
+                                example: Other
+                              cancellationNote:
+                                type: string
+                                nullable: true
+                                description: The cancellation note if the appointment is cancelled
+                                example: Some notes
+                            required:
+                              - appointmentId
+                              - patientId
+                              - status
+                              - note
+                              - invoiceId
+                              - cancellationReason
+                              - cancellationNote
+                          description: The status of each patient of this appointment
+                        repeatId:
+                          type: string
+                          nullable: true
+                          description: An recurring appointment will have this repeat id
+                          example: 12345678-abcd-4321-dcba-12a34b56c78d
+                        recurringRule:
+                          type: string
+                          nullable: true
+                          description: The rule for recurring appointment
+                          example: DTSTART:2023080T010000ZRRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=6
+                        unit:
+                          type: string
+                          nullable: true
+                          enum: &a11
+                            - Hour
+                            - Each
+                          default: Hour
+                          description: The appointment unit
+                        pricing:
+                          type: number
+                          nullable: true
+                          description: The appointment unit price, in dollar
+                          example: 193.99
+                        total:
+                          type: number
+                          nullable: true
+                          description: The appointment total price without tax, in dollar
+                          example: 193.99
+                        taxType:
+                          anyOf:
+                            - type: string
+                              enum: *a7
+                            - type: string
+                            - nullable: true
+                          description: Tax type, check Splose support for more info
+                          example: STANDARD
+                        supportItemIds:
+                          type: array
+                          items:
+                            type: integer
+                            minimum: 0
+                            exclusiveMinimum: true
+                            example: 1
+                          description: Array of support item ids of this appointment
+                          example: &a12
+                            - 1
+                        note:
+                          type: string
+                          nullable: true
+                          description: The appointment note
+                          example: Some notes
+                        createdAt:
+                          type: string
+                          nullable: true
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          type: string
+                          nullable: true
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          type: string
+                          nullable: true
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - start
+                        - end
+                        - serviceId
+                        - locationId
+                        - practitionerId
+                        - maxPatients
+                        - appointmentPatients
+                        - repeatId
+                        - recurringRule
+                        - unit
+                        - pricing
+                        - total
+                        - taxType
+                        - supportItemIds
+                        - note
+                        - createdAt
+                        - updatedAt
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/appointments/{id}":
+    get:
+      tags:
+        - appointment
+      description: Get appointment data by id
+      summary: Get a single appointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with appointment data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Appointment id
+                    example: 1
+                  start:
+                    type: string
+                    nullable: true
+                    description: Appointment start date time
+                    example: 2023-07-30T09:00:00Z
+                  end:
+                    type: string
+                    nullable: true
+                    description: Appointment start date time
+                    example: 2023-07-30T09:00:00Z
+                  isUnavailableBlock:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                  serviceId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The service id of this appointment
+                    example: 1
+                  locationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The location id of this appointment
+                    example: 1
+                  practitionerId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The practitioner id of this appointment
+                    example: 1
+                  maxPatients:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    default: 1
+                    description: The max patient number of this appointment. A number greater than 1
+                      indicates a group appointment.
+                  appointmentPatients:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        appointmentId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Appointment id
+                          example: 1
+                        patientId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient id
+                          example: 1
+                        status:
+                          type: string
+                          nullable: true
+                          enum: *a10
+                          description: Patient status of this appointment
+                        note:
+                          type: string
+                          nullable: true
+                          description: Note for the appointment patient
+                          example: Some notes
+                        doNotInvoice:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether this appointment patient will not be invoiced
+                        invoiceId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id of this appointment patient
+                          example: 1
+                        cancellationReason:
+                          type: string
+                          nullable: true
+                          description: The cancellation reason if the appointment is cancelled
+                          example: Other
+                        cancellationNote:
+                          type: string
+                          nullable: true
+                          description: The cancellation note if the appointment is cancelled
+                          example: Some notes
+                      required:
+                        - appointmentId
+                        - patientId
+                        - status
+                        - note
+                        - invoiceId
+                        - cancellationReason
+                        - cancellationNote
+                    description: The status of each patient of this appointment
+                  repeatId:
+                    type: string
+                    nullable: true
+                    description: An recurring appointment will have this repeat id
+                    example: 12345678-abcd-4321-dcba-12a34b56c78d
+                  recurringRule:
+                    type: string
+                    nullable: true
+                    description: The rule for recurring appointment
+                    example: DTSTART:2023080T010000ZRRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=6
+                  unit:
+                    type: string
+                    nullable: true
+                    enum: *a11
+                    default: Hour
+                    description: The appointment unit
+                  pricing:
+                    type: number
+                    nullable: true
+                    description: The appointment unit price, in dollar
+                    example: 193.99
+                  total:
+                    type: number
+                    nullable: true
+                    description: The appointment total price without tax, in dollar
+                    example: 193.99
+                  taxType:
+                    anyOf:
+                      - type: string
+                        enum: *a7
+                      - type: string
+                      - nullable: true
+                    description: Tax type, check Splose support for more info
+                    example: STANDARD
+                  supportItemIds:
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      exclusiveMinimum: true
+                      example: 1
+                    description: Array of support item ids of this appointment
+                    example: *a12
+                  note:
+                    type: string
+                    nullable: true
+                    description: The appointment note
+                    example: Some notes
+                  createdAt:
+                    type: string
+                    nullable: true
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    type: string
+                    nullable: true
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    type: string
+                    nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - start
+                  - end
+                  - serviceId
+                  - locationId
+                  - practitionerId
+                  - maxPatients
+                  - appointmentPatients
+                  - repeatId
+                  - recurringRule
+                  - unit
+                  - pricing
+                  - total
+                  - taxType
+                  - supportItemIds
+                  - note
+                  - createdAt
+                  - updatedAt
+                  - deletedAt
+  /support-activities:
+    get:
+      tags:
+        - support-activity
+      description: Get a paged array of support-activities
+      summary: Get a paged array of support-activities
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for support activities start after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: start_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for support activities start before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: start_lt
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for support activities with this patient id
+            example: 1
+          required: false
+          name: patientId
+          in: query
+      responses:
+        "200":
+          description: A paged array of support-activities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Support activity id
+                          example: 1
+                        start:
+                          type: string
+                          nullable: true
+                          description: Support activity start date time
+                          example: 2023-07-30T09:00:00Z
+                        end:
+                          type: string
+                          nullable: true
+                          description: Support activity start date time
+                          example: 2023-07-30T09:00:00Z
+                        patientId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient id
+                          example: 1
+                        practitionerId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The practitioner id of this support activity
+                          example: 1
+                        serviceId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The service id of this support activity
+                          example: 1
+                        locationId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The location id of this support activity
+                          example: 1
+                        note:
+                          type: string
+                          nullable: true
+                          description: Note for the support activity
+                          example: Some notes
+                        itemCode:
+                          type: string
+                          nullable: true
+                          description: Item code for the support activity
+                          example: 123_456_7890
+                        repeatId:
+                          type: string
+                          nullable: true
+                          description: An recurring support activity will have this repeat id
+                          example: 12345678-abcd-4321-dcba-12a34b56c78d
+                        recurringRule:
+                          type: string
+                          nullable: true
+                          description: The rule for recurring support activity
+                          example: DTSTART:2023080T010000ZRRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=6
+                        unit:
+                          type: string
+                          nullable: true
+                          default: Hour
+                          description: The support activity unit
+                        pricing:
+                          type: number
+                          nullable: true
+                          description: The support activity unit price, in dollar
+                          example: 193.99
+                        quantity:
+                          type: number
+                          nullable: true
+                          description: The support activity quantity
+                          example: 193.99
+                        taxType:
+                          anyOf:
+                            - type: string
+                              enum: *a7
+                            - type: string
+                            - nullable: true
+                          description: Tax type, check Splose support for more info
+                          example: STANDARD
+                        doNotInvoice:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether this support activity patient will not be invoiced
+                        invoiceId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id of this support activity patient
+                          example: 1
+                        createdAt:
+                          type: string
+                          nullable: true
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          type: string
+                          nullable: true
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          type: string
+                          nullable: true
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - start
+                        - end
+                        - patientId
+                        - practitionerId
+                        - serviceId
+                        - locationId
+                        - note
+                        - itemCode
+                        - repeatId
+                        - recurringRule
+                        - unit
+                        - pricing
+                        - quantity
+                        - taxType
+                        - invoiceId
+                        - createdAt
+                        - updatedAt
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/support-activities/{id}":
+    get:
+      tags:
+        - support-activity
+      description: Get support-activity data by id
+      summary: Get a single support-activity
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with support-activity data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Support activity id
+                    example: 1
+                  start:
+                    type: string
+                    nullable: true
+                    description: Support activity start date time
+                    example: 2023-07-30T09:00:00Z
+                  end:
+                    type: string
+                    nullable: true
+                    description: Support activity start date time
+                    example: 2023-07-30T09:00:00Z
+                  patientId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient id
+                    example: 1
+                  practitionerId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The practitioner id of this support activity
+                    example: 1
+                  serviceId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The service id of this support activity
+                    example: 1
+                  locationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The location id of this support activity
+                    example: 1
+                  note:
+                    type: string
+                    nullable: true
+                    description: Note for the support activity
+                    example: Some notes
+                  itemCode:
+                    type: string
+                    nullable: true
+                    description: Item code for the support activity
+                    example: 123_456_7890
+                  repeatId:
+                    type: string
+                    nullable: true
+                    description: An recurring support activity will have this repeat id
+                    example: 12345678-abcd-4321-dcba-12a34b56c78d
+                  recurringRule:
+                    type: string
+                    nullable: true
+                    description: The rule for recurring support activity
+                    example: DTSTART:2023080T010000ZRRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=6
+                  unit:
+                    type: string
+                    nullable: true
+                    default: Hour
+                    description: The support activity unit
+                  pricing:
+                    type: number
+                    nullable: true
+                    description: The support activity unit price, in dollar
+                    example: 193.99
+                  quantity:
+                    type: number
+                    nullable: true
+                    description: The support activity quantity
+                    example: 193.99
+                  taxType:
+                    anyOf:
+                      - type: string
+                        enum: *a7
+                      - type: string
+                      - nullable: true
+                    description: Tax type, check Splose support for more info
+                    example: STANDARD
+                  doNotInvoice:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether this support activity patient will not be invoiced
+                  invoiceId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Invoice id of this support activity patient
+                    example: 1
+                  createdAt:
+                    type: string
+                    nullable: true
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    type: string
+                    nullable: true
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    type: string
+                    nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - start
+                  - end
+                  - patientId
+                  - practitionerId
+                  - serviceId
+                  - locationId
+                  - note
+                  - itemCode
+                  - repeatId
+                  - recurringRule
+                  - unit
+                  - pricing
+                  - quantity
+                  - taxType
+                  - invoiceId
+                  - createdAt
+                  - updatedAt
+                  - deletedAt
+  /support-items:
+    get:
+      tags:
+        - support-item
+      description: Get a paged array of support-items
+      summary: Get a paged array of support-items
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: Appointment id of the support items
+          required: false
+          name: appointmentId
+          in: query
+      responses:
+        "200":
+          description: A paged array of support-items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Support item id
+                          example: 1
+                        appointmentId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Appointment id of the support item
+                          example: 1
+                        type:
+                          type: string
+                          enum: &a13
+                            - Provider Travel
+                            - Provider Travel - Non-Labour Costs
+                            - Activity Based Transport
+                          description: Support item type
+                          example: Provider Travel
+                        itemCode:
+                          type: string
+                          nullable: true
+                          description: Support item code
+                          example: 123_456_7890
+                        pricing:
+                          type: number
+                          nullable: true
+                          description: The appointment unit price, in dollar
+                          example: 193.99
+                        toMinutes:
+                          type: number
+                          nullable: true
+                          description: Minutes spent on travelling to the patient for provider travel
+                          example: 20
+                        returnMinutes:
+                          type: number
+                          nullable: true
+                          description: Minutes spent traveling from the patient for provider travel
+                          example: 20
+                        unit:
+                          type: string
+                          nullable: true
+                          description: The support item unit
+                          example: km
+                        quantity:
+                          type: number
+                          nullable: true
+                          description: The support item quantity
+                        note:
+                          type: string
+                          nullable: true
+                          description: The support item note
+                          example: Some notes
+                        createdAt:
+                          type: string
+                          nullable: true
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          type: string
+                          nullable: true
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          type: string
+                          nullable: true
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - appointmentId
+                        - type
+                        - itemCode
+                        - pricing
+                        - toMinutes
+                        - returnMinutes
+                        - unit
+                        - quantity
+                        - note
+                        - createdAt
+                        - updatedAt
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/support-items/{id}":
+    get:
+      tags:
+        - support-item
+      description: Get support-item data by id
+      summary: Get a single support-item
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with support-item data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Support item id
+                    example: 1
+                  appointmentId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Appointment id of the support item
+                    example: 1
+                  type:
+                    type: string
+                    enum: *a13
+                    description: Support item type
+                    example: Provider Travel
+                  itemCode:
+                    type: string
+                    nullable: true
+                    description: Support item code
+                    example: 123_456_7890
+                  pricing:
+                    type: number
+                    nullable: true
+                    description: The appointment unit price, in dollar
+                    example: 193.99
+                  toMinutes:
+                    type: number
+                    nullable: true
+                    description: Minutes spent on travelling to the patient for provider travel
+                    example: 20
+                  returnMinutes:
+                    type: number
+                    nullable: true
+                    description: Minutes spent traveling from the patient for provider travel
+                    example: 20
+                  unit:
+                    type: string
+                    nullable: true
+                    description: The support item unit
+                    example: km
+                  quantity:
+                    type: number
+                    nullable: true
+                    description: The support item quantity
+                  note:
+                    type: string
+                    nullable: true
+                    description: The support item note
+                    example: Some notes
+                  createdAt:
+                    type: string
+                    nullable: true
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    type: string
+                    nullable: true
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    type: string
+                    nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - appointmentId
+                  - type
+                  - itemCode
+                  - pricing
+                  - toMinutes
+                  - returnMinutes
+                  - unit
+                  - quantity
+                  - note
+                  - createdAt
+                  - updatedAt
+                  - deletedAt
+  /invoices:
+    get:
+      tags:
+        - invoice
+      description: Get a paged array of invoices
+      summary: Get a paged array of invoices
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for Invoices of this patient
+            example: 1
+          required: false
+          name: patientId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for Invoices created at this location
+            example: 1
+          required: false
+          name: locationId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for Invoices created by this practitioner
+            example: 1
+          required: false
+          name: practitionerId
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: &a14
+              - Draft
+              - Awaiting Payment
+              - Paid
+            description: Search for invoices of this status
+            example: Paid
+          required: false
+          name: status
+          in: query
+      responses:
+        "200":
+          description: A paged array of invoices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id
+                          example: 1
+                        invoiceNumber:
+                          type: string
+                          description: Invoice number
+                          example: INV-0001
+                        issueDate:
+                          type: string
+                          nullable: true
+                          description: Invoice issue date time
+                          example: 2023-07-30T09:00:00Z
+                        dueDate:
+                          type: string
+                          nullable: true
+                          description: Invoice due date time
+                          example: 2023-07-30T09:00:00Z
+                        patientId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The invoice patient id
+                          example: 1
+                        locationId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The invoice location id
+                          example: 1
+                        practitionerId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The invoice practitioner id
+                          example: 1
+                        extraBillingInfo:
+                          type: string
+                          nullable: true
+                          description: Invoice extra billing info
+                          example: Some extra info
+                        subtotal:
+                          type: number
+                          nullable: true
+                          description: Invoice subtotal amount
+                          example: 193.99
+                        taxStatus:
+                          type: string
+                          enum: &a15
+                            - including
+                            - excluding
+                            - no tax
+                          description: Invoice tax status
+                          example: excluding
+                        tax:
+                          type: number
+                          nullable: true
+                          description: Invoice tax amount
+                          example: 0
+                        total:
+                          type: number
+                          nullable: true
+                          description: Invoice total amount
+                          example: 193.99
+                        paidAmount:
+                          type: number
+                          nullable: true
+                          description: Invoice paid amount
+                          example: 193.99
+                        status:
+                          type: string
+                          enum: *a14
+                          description: Invoice status
+                          example: Paid
+                        invoiceItems:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Invoice item id
+                                example: 1
+                              type:
+                                type: string
+                                enum: &a16
+                                  - appointment
+                                  - supportActivity
+                                  - supportItem
+                                  - service
+                                  - productStock
+                                  - custom
+                                  - GiftVoucher
+                                description: Invoice item type
+                                example: appointment
+                              typeId:
+                                type: integer
+                                nullable: true
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Invoice item object id
+                                example: 1
+                              code:
+                                type: string
+                                nullable: true
+                                description: Invoice item code
+                                example: 123_4567
+                              description:
+                                type: string
+                                nullable: true
+                                description: Invoice item description
+                                example: Wed 30 Aug 2023, 09:00am - Initial Assessment
+                              unitPrice:
+                                type: number
+                                nullable: true
+                                description: Invoice item unit price, in dollar
+                                example: 193.99
+                              quantity:
+                                type: number
+                                nullable: true
+                                description: Invoice item quantity
+                                example: 0.5
+                              discount:
+                                type: string
+                                nullable: true
+                                description: Invoice item discount, in dollar or percentage
+                                example: $20.00
+                              taxType:
+                                anyOf:
+                                  - type: string
+                                    enum: *a7
+                                  - type: string
+                                  - nullable: true
+                                description: Tax type, check Splose support for more info
+                                example: STANDARD
+                              taxRate:
+                                type: number
+                                nullable: true
+                                description: Tax rate, in percentage
+                                example: 10
+                            required:
+                              - id
+                              - type
+                              - typeId
+                              - code
+                              - description
+                              - unitPrice
+                              - quantity
+                              - discount
+                              - taxType
+                              - taxRate
+                        referenceNumbers:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                          description: Invoice provider numbers
+                          example: &a17
+                            - "Medicare: 12345678"
+                        isArchived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the invoice is archvied
+                        reference:
+                          type: string
+                          nullable: true
+                          description: Invoice reference
+                          example: Some references
+                        description:
+                          type: string
+                          nullable: true
+                          description: Invoice description
+                          example: Some description
+                        createdAt:
+                          type: string
+                          nullable: true
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          type: string
+                          nullable: true
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - invoiceNumber
+                        - issueDate
+                        - dueDate
+                        - patientId
+                        - locationId
+                        - practitionerId
+                        - extraBillingInfo
+                        - subtotal
+                        - taxStatus
+                        - tax
+                        - total
+                        - paidAmount
+                        - status
+                        - invoiceItems
+                        - referenceNumbers
+                        - reference
+                        - description
+                        - createdAt
+                        - updatedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/invoices/{id}":
+    get:
+      tags:
+        - invoice
+      description: Get invoice data by id
+      summary: Get a single invoice
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with invoice data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Invoice id
+                    example: 1
+                  invoiceNumber:
+                    type: string
+                    description: Invoice number
+                    example: INV-0001
+                  issueDate:
+                    type: string
+                    nullable: true
+                    description: Invoice issue date time
+                    example: 2023-07-30T09:00:00Z
+                  dueDate:
+                    type: string
+                    nullable: true
+                    description: Invoice due date time
+                    example: 2023-07-30T09:00:00Z
+                  patientId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The invoice patient id
+                    example: 1
+                  locationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The invoice location id
+                    example: 1
+                  practitionerId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The invoice practitioner id
+                    example: 1
+                  extraBillingInfo:
+                    type: string
+                    nullable: true
+                    description: Invoice extra billing info
+                    example: Some extra info
+                  subtotal:
+                    type: number
+                    nullable: true
+                    description: Invoice subtotal amount
+                    example: 193.99
+                  taxStatus:
+                    type: string
+                    enum: *a15
+                    description: Invoice tax status
+                    example: excluding
+                  tax:
+                    type: number
+                    nullable: true
+                    description: Invoice tax amount
+                    example: 0
+                  total:
+                    type: number
+                    nullable: true
+                    description: Invoice total amount
+                    example: 193.99
+                  paidAmount:
+                    type: number
+                    nullable: true
+                    description: Invoice paid amount
+                    example: 193.99
+                  status:
+                    type: string
+                    enum: *a14
+                    description: Invoice status
+                    example: Paid
+                  invoiceItems:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice item id
+                          example: 1
+                        type:
+                          type: string
+                          enum: *a16
+                          description: Invoice item type
+                          example: appointment
+                        typeId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice item object id
+                          example: 1
+                        code:
+                          type: string
+                          nullable: true
+                          description: Invoice item code
+                          example: 123_4567
+                        description:
+                          type: string
+                          nullable: true
+                          description: Invoice item description
+                          example: Wed 30 Aug 2023, 09:00am - Initial Assessment
+                        unitPrice:
+                          type: number
+                          nullable: true
+                          description: Invoice item unit price, in dollar
+                          example: 193.99
+                        quantity:
+                          type: number
+                          nullable: true
+                          description: Invoice item quantity
+                          example: 0.5
+                        discount:
+                          type: string
+                          nullable: true
+                          description: Invoice item discount, in dollar or percentage
+                          example: $20.00
+                        taxType:
+                          anyOf:
+                            - type: string
+                              enum: *a7
+                            - type: string
+                            - nullable: true
+                          description: Tax type, check Splose support for more info
+                          example: STANDARD
+                        taxRate:
+                          type: number
+                          nullable: true
+                          description: Tax rate, in percentage
+                          example: 10
+                      required:
+                        - id
+                        - type
+                        - typeId
+                        - code
+                        - description
+                        - unitPrice
+                        - quantity
+                        - discount
+                        - taxType
+                        - taxRate
+                  referenceNumbers:
+                    type: array
+                    nullable: true
+                    items:
+                      type: string
+                    description: Invoice provider numbers
+                    example: *a17
+                  isArchived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the invoice is archvied
+                  reference:
+                    type: string
+                    nullable: true
+                    description: Invoice reference
+                    example: Some references
+                  description:
+                    type: string
+                    nullable: true
+                    description: Invoice description
+                    example: Some description
+                  createdAt:
+                    type: string
+                    nullable: true
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    type: string
+                    nullable: true
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - invoiceNumber
+                  - issueDate
+                  - dueDate
+                  - patientId
+                  - locationId
+                  - practitionerId
+                  - extraBillingInfo
+                  - subtotal
+                  - taxStatus
+                  - tax
+                  - total
+                  - paidAmount
+                  - status
+                  - invoiceItems
+                  - referenceNumbers
+                  - reference
+                  - description
+                  - createdAt
+                  - updatedAt
