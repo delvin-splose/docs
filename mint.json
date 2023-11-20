@@ -27,10 +27,6 @@
       "color": "#00b4d8"
     }
   ],
-  "feedback": {
-    "thumbsRating": true,
-    "raiseIssue": true
-  },
   "navigation": [
     {
       "group": "Get Started",
