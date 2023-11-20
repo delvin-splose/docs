@@ -3,30 +3,34 @@
   "name": "Splose API Documentation",
   "logo": {
     "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg",
-    "href": "https://splose.com"
+    "light": "/logo/light.svg"
   },
   "favicon": "/logo/favicon.png",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#1355ff",
+    "light": "#00a6fb",
+    "dark": "#1355ff",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#00a6fb",
+      "to": "#1355ff"
     }
   },
   "topbarCtaButton": {
-    "name": "Dashboard",
+    "name": "Login",
     "url": "https://splose.com/login"
   },
   "anchors": [
     {
       "name": "Blog",
       "icon": "newspaper",
-      "url": "https://splose.com/blog"
+      "url": "https://splose.com/blog",
+      "color": "#00b4d8"
     }
   ],
+  "feedback": {
+    "thumbsRating": true,
+    "raiseIssue": true
+  },
   "navigation": [
     {
       "group": "Get Started",
@@ -98,6 +102,9 @@
     "baseUrl": "https://api.splose.com/",
     "auth": {
       "method": "bearer"
+    },
+    "playground": {
+      "mode": "hide"
     }
   },
   "openapi": ["openapi-docs.yml"],
