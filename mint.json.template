@@ -90,6 +90,12 @@
             "api-reference/endpoints/invoice/get-a-paged-array-of-invoices",
             "api-reference/endpoints/invoice/get-a-single-invoice"
           ]
+        },
+        {
+          "group": "Availability",
+          "pages": [
+            "api-reference/endpoints/availability/get-all-availabilities-of-a-practitioner"
+          ]
         }
       ]
     }

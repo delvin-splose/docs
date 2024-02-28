@@ -2,4 +2,6 @@
 
 1. Run `npm start`
 
-2. Push code to github repository using `developer@splose.com` account
+2. Run `git config user.email 'developer@splose.com'`
+
+3. Push code to github repository
