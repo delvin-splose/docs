@@ -135,16 +135,18 @@ paths:
           name: id_lt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: update_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -379,14 +381,17 @@ paths:
                               example: AHM
                             membershipNumber:
                               type: string
+                              nullable: true
                               description: Health fund membership number
                               example: "12345678"
                             patientNumber:
                               type: string
+                              nullable: true
                               description: Health fund patient number
                               example: "1"
                             cardIssueNumber:
                               type: string
+                              nullable: true
                               description: Health fund card issue number
                               example: "01"
                           required:
@@ -439,13 +444,15 @@ paths:
                           default: false
                           description: Whether the patient has been archived
                         createdAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object creation date time
                           example: 2023-07-30T09:00:00Z
                         updatedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -670,14 +677,17 @@ paths:
                         example: AHM
                       membershipNumber:
                         type: string
+                        nullable: true
                         description: Health fund membership number
                         example: "12345678"
                       patientNumber:
                         type: string
+                        nullable: true
                         description: Health fund patient number
                         example: "1"
                       cardIssueNumber:
                         type: string
+                        nullable: true
                         description: Health fund card issue number
                         example: "01"
                     required:
@@ -729,13 +739,15 @@ paths:
                     default: false
                     description: Whether the patient has been archived
                   createdAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object creation date time
                     example: 2023-07-30T09:00:00Z
                   updatedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -799,16 +811,18 @@ paths:
           name: id_lt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: update_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -968,18 +982,22 @@ paths:
                           example: &a8
                             - NDIS
                         createdAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object creation date time
                           example: 2023-07-30T09:00:00Z
                         updatedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                         deletedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -1131,18 +1149,22 @@ paths:
                     description: Service tags
                     example: *a8
                   createdAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object creation date time
                     example: 2023-07-30T09:00:00Z
                   updatedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                   deletedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -1190,16 +1212,18 @@ paths:
           name: id_lt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: update_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -1296,18 +1320,22 @@ paths:
                           description: Location timezone
                           example: Australia/Adelaide
                         createdAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object creation date time
                           example: 2023-07-30T09:00:00Z
                         updatedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                         deletedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -1425,18 +1453,22 @@ paths:
                     description: Location timezone
                     example: Australia/Adelaide
                   createdAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object creation date time
                     example: 2023-07-30T09:00:00Z
                   updatedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                   deletedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -1480,16 +1512,18 @@ paths:
           name: id_lt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: update_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -1635,18 +1669,22 @@ paths:
                               - number
                               - locationId
                         createdAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object creation date time
                           example: 2023-07-30T09:00:00Z
                         updatedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                         deletedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -1769,18 +1807,22 @@ paths:
                         - number
                         - locationId
                   createdAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object creation date time
                     example: 2023-07-30T09:00:00Z
                   updatedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                   deletedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -1821,16 +1863,18 @@ paths:
           name: id_lt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: update_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -1857,16 +1901,20 @@ paths:
           name: status
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
             description: Search for appointments start after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: start_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
             description: Search for appointments start before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -1900,13 +1948,15 @@ paths:
                           description: Appointment id
                           example: 1
                         start:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Appointment start date time
                           example: 2023-07-30T09:00:00Z
                         end:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Appointment start date time
                           example: 2023-07-30T09:00:00Z
                         isUnavailableBlock:
@@ -2050,18 +2100,22 @@ paths:
                           description: The appointment note
                           example: Some notes
                         createdAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object creation date time
                           example: 2023-07-30T09:00:00Z
                         updatedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                         deletedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -2130,13 +2184,15 @@ paths:
                     description: Appointment id
                     example: 1
                   start:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Appointment start date time
                     example: 2023-07-30T09:00:00Z
                   end:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Appointment start date time
                     example: 2023-07-30T09:00:00Z
                   isUnavailableBlock:
@@ -2277,18 +2333,22 @@ paths:
                     description: The appointment note
                     example: Some notes
                   createdAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object creation date time
                     example: 2023-07-30T09:00:00Z
                   updatedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                   deletedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -2337,16 +2397,18 @@ paths:
           name: id_lt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: update_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -2405,13 +2467,15 @@ paths:
                           description: Support activity id
                           example: 1
                         start:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Support activity start date time
                           example: 2023-07-30T09:00:00Z
                         end:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Support activity start date time
                           example: 2023-07-30T09:00:00Z
                         patientId:
@@ -2494,18 +2558,22 @@ paths:
                           description: Invoice id of this support activity patient
                           example: 1
                         createdAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object creation date time
                           example: 2023-07-30T09:00:00Z
                         updatedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                         deletedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -2574,13 +2642,15 @@ paths:
                     description: Support activity id
                     example: 1
                   start:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Support activity start date time
                     example: 2023-07-30T09:00:00Z
                   end:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Support activity start date time
                     example: 2023-07-30T09:00:00Z
                   patientId:
@@ -2663,18 +2733,22 @@ paths:
                     description: Invoice id of this support activity patient
                     example: 1
                   createdAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object creation date time
                     example: 2023-07-30T09:00:00Z
                   updatedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                   deletedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -2723,16 +2797,18 @@ paths:
           name: id_lt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: update_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -2822,18 +2898,22 @@ paths:
                           description: The support item note
                           example: Some notes
                         createdAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object creation date time
                           example: 2023-07-30T09:00:00Z
                         updatedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                         deletedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -2941,18 +3021,22 @@ paths:
                     description: The support item note
                     example: Some notes
                   createdAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object creation date time
                     example: 2023-07-30T09:00:00Z
                   updatedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                   deletedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -2995,16 +3079,18 @@ paths:
           name: id_lt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated after this date time
             example: 2023-07-30T09:00:00Z
           required: false
           name: update_gt
           in: query
         - schema:
-            type: string
-            nullable: true
+            anyOf:
+              - type: string
+              - type: string
             description: Search for objects updated before this date time
             example: 2023-07-30T09:00:00Z
           required: false
@@ -3079,13 +3165,15 @@ paths:
                           description: Invoice number
                           example: INV-0001
                         issueDate:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Invoice issue date time
                           example: 2023-07-30T09:00:00Z
                         dueDate:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Invoice due date time
                           example: 2023-07-30T09:00:00Z
                         patientId:
@@ -3248,13 +3336,15 @@ paths:
                           description: Invoice description
                           example: Some description
                         createdAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object creation date time
                           example: 2023-07-30T09:00:00Z
                         updatedAt:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -3328,13 +3418,15 @@ paths:
                     description: Invoice number
                     example: INV-0001
                   issueDate:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Invoice issue date time
                     example: 2023-07-30T09:00:00Z
                   dueDate:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Invoice due date time
                     example: 2023-07-30T09:00:00Z
                   patientId:
@@ -3486,13 +3578,15 @@ paths:
                     description: Invoice description
                     example: Some description
                   createdAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object creation date time
                     example: 2023-07-30T09:00:00Z
                   updatedAt:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -3516,3 +3610,96 @@ paths:
                   - description
                   - createdAt
                   - updatedAt
+  "/availabilities/{practitionerId}":
+    get:
+      tags:
+        - availability
+      description: Get all availabilities of a practitioner in the specified date
+        range, max 100 days
+      summary: Get all availabilities of a practitioner
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: practitionerId
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Start date of the availabilities
+            example: 2024-01-01
+          required: true
+          name: startDate
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: End date of the availabilities, 100 days since startDate
+            example: 2024-01-31
+          required: true
+          name: endDate
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for availabilities with this location id
+            example: 1
+          required: false
+          name: locationId
+          in: query
+      responses:
+        "200":
+          description: An array of availabilities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          description: Availability date
+                          example: 2024-01-04
+                        locationId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The location id of the availability
+                          example: 1
+                        startTime:
+                          type: string
+                          pattern: ^(\d{2}):(\d{2})$
+                          description: Start time of the availability
+                          example: 09:00
+                        endTime:
+                          type: string
+                          pattern: ^(\d{2}):(\d{2})$
+                          description: End time of the availability
+                          example: 17:00
+                        repeatInterval:
+                          type: string
+                          nullable: true
+                          enum:
+                            - Weekly
+                            - Fortnightly
+                          description: The repeat interval of the availability if applicable
+                          example: Weekly
+                      required:
+                        - date
+                        - locationId
+                        - startTime
+                        - endTime
+                        - repeatInterval
+                required:
+                  - data
