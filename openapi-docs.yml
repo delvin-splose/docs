@@ -3689,7 +3689,7 @@ paths:
                           type: string
                           pattern: ^(\d{2}):(\d{2})$
                           description: End time of the availability
-                          example: "17:00"
+                          example: "16:00"
                         repeatInterval:
                           type: string
                           nullable: true
