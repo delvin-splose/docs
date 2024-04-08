@@ -4,10 +4,10 @@
   "logo": { "dark": "/logo/dark.svg", "light": "/logo/light.svg" },
   "favicon": "/logo/favicon.png",
   "colors": {
-    "primary": "#1355ff",
-    "light": "#00a6fb",
-    "dark": "#1355ff",
-    "anchors": { "from": "#00a6fb", "to": "#1355ff" }
+    "primary": "#8250ff",
+    "light": "#8250ff",
+    "dark": "#8250ff",
+    "anchors": { "from": "#a17cff", "to": "#8250ff" }
   },
   "topbarCtaButton": { "name": "Login", "url": "https://splose.com/login" },
   "anchors": [
@@ -15,7 +15,7 @@
       "name": "Blog",
       "icon": "newspaper",
       "url": "https://splose.com/blog",
-      "color": "#00b4d8"
+      "color": "#8250ff"
     }
   ],
   "navigation": [
