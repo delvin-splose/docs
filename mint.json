@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Splose API Documentation",
+  "name": "splose API Documentation",
   "logo": { "dark": "/logo/dark.svg", "light": "/logo/light.svg" },
   "favicon": "/logo/favicon.png",
   "colors": {
@@ -14,7 +14,7 @@
     {
       "name": "Blog",
       "icon": "newspaper",
-      "url": "https://splose.com/blog",
+      "url": "https://splose.com/resources/the-handover",
       "color": "#8250ff"
     }
   ],
