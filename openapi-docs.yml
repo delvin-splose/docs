@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: splose public API
   description: >
-
+    
     Welcome to the splose API documentation. splose serves as a comprehensive Allied Health & NDIS practice management software designed to streamline administrative tasks and foster the growth of your practice.
 
 
@@ -93,7 +93,14 @@ info:
 
     + `update_gt`: Request for objects updated after the specified datetime. 
 
-    + `update_lt`: Request for objects updated before the specified datetime.
+    + `update_lt`: Request for objects updated before the specified datetime. 
+
+
+    # Change log
+
+    + 2024-04-10: add payment method and payment endpoints
+
+    + 2024-02-28: add availability endpoint
   contact:
     email: support@splose.com
 externalDocs:
@@ -942,7 +949,7 @@ paths:
                                 - REDUCED
                             - type: string
                             - nullable: true
-                          description: Tax type, check splose support for more info
+                          description: Tax type, check Splose support for more info
                           example: STANDARD
                         allowProviderTravel:
                           type: boolean
@@ -1110,7 +1117,7 @@ paths:
                         enum: *a7
                       - type: string
                       - nullable: true
-                    description: Tax type, check splose support for more info
+                    description: Tax type, check Splose support for more info
                     example: STANDARD
                   allowProviderTravel:
                     type: boolean
@@ -1988,8 +1995,7 @@ paths:
                           minimum: 0
                           exclusiveMinimum: true
                           default: 1
-                          description:
-                            The max patient number of this appointment. A number greater than 1
+                          description: The max patient number of this appointment. A number greater than 1
                             indicates a group appointment.
                         appointmentPatients:
                           type: array
@@ -2083,7 +2089,7 @@ paths:
                               enum: *a7
                             - type: string
                             - nullable: true
-                          description: Tax type, check splose support for more info
+                          description: Tax type, check Splose support for more info
                           example: STANDARD
                         supportItemIds:
                           type: array
@@ -2225,8 +2231,7 @@ paths:
                     minimum: 0
                     exclusiveMinimum: true
                     default: 1
-                    description:
-                      The max patient number of this appointment. A number greater than 1
+                    description: The max patient number of this appointment. A number greater than 1
                       indicates a group appointment.
                   appointmentPatients:
                     type: array
@@ -2318,7 +2323,7 @@ paths:
                         enum: *a7
                       - type: string
                       - nullable: true
-                    description: Tax type, check splose support for more info
+                    description: Tax type, check Splose support for more info
                     example: STANDARD
                   supportItemIds:
                     type: array
@@ -2545,7 +2550,7 @@ paths:
                               enum: *a7
                             - type: string
                             - nullable: true
-                          description: Tax type, check splose support for more info
+                          description: Tax type, check Splose support for more info
                           example: STANDARD
                         doNotInvoice:
                           type: boolean
@@ -2720,7 +2725,7 @@ paths:
                         enum: *a7
                       - type: string
                       - nullable: true
-                    description: Tax type, check splose support for more info
+                    description: Tax type, check Splose support for more info
                     example: STANDARD
                   doNotInvoice:
                     type: boolean
@@ -3296,7 +3301,7 @@ paths:
                                     enum: *a7
                                   - type: string
                                   - nullable: true
-                                description: Tax type, check splose support for more info
+                                description: Tax type, check Splose support for more info
                                 example: STANDARD
                               taxRate:
                                 type: number
@@ -3314,6 +3319,13 @@ paths:
                               - discount
                               - taxType
                               - taxRate
+                        paymentIds:
+                          type: array
+                          items:
+                            type: integer
+                            minimum: 0
+                            exclusiveMinimum: true
+                            example: 1
                         referenceNumbers:
                           type: array
                           nullable: true
@@ -3365,6 +3377,7 @@ paths:
                         - paidAmount
                         - status
                         - invoiceItems
+                        - paymentIds
                         - referenceNumbers
                         - reference
                         - description
@@ -3539,7 +3552,7 @@ paths:
                               enum: *a7
                             - type: string
                             - nullable: true
-                          description: Tax type, check splose support for more info
+                          description: Tax type, check Splose support for more info
                           example: STANDARD
                         taxRate:
                           type: number
@@ -3557,6 +3570,13 @@ paths:
                         - discount
                         - taxType
                         - taxRate
+                  paymentIds:
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      exclusiveMinimum: true
+                      example: 1
                   referenceNumbers:
                     type: array
                     nullable: true
@@ -3607,17 +3627,138 @@ paths:
                   - paidAmount
                   - status
                   - invoiceItems
+                  - paymentIds
                   - referenceNumbers
                   - reference
                   - description
                   - createdAt
                   - updatedAt
+  /payment-methods:
+    get:
+      tags:
+        - payment-method
+      description: Get a paged array of payment-methods
+      summary: Get a paged array of payment-methods
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+      responses:
+        "200":
+          description: A paged array of payment-methods
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Payment method id
+                          example: 1
+                        name:
+                          type: string
+                          description: Payment method name
+                        description:
+                          type: string
+                          nullable: true
+                          description: Payment method description
+                        xeroAccountCode:
+                          type: string
+                          nullable: true
+                          description: Xero account code
+                      required:
+                        - id
+                        - name
+                        - description
+                        - xeroAccountCode
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/payment-methods/{id}":
+    get:
+      tags:
+        - payment-method
+      description: Get payment-method data by id
+      summary: Get a single payment-method
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with payment-method data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Payment method id
+                    example: 1
+                  name:
+                    type: string
+                    description: Payment method name
+                  description:
+                    type: string
+                    nullable: true
+                    description: Payment method description
+                  xeroAccountCode:
+                    type: string
+                    nullable: true
+                    description: Xero account code
+                required:
+                  - id
+                  - name
+                  - description
+                  - xeroAccountCode
   "/availabilities/{practitionerId}":
     get:
       tags:
         - availability
-      description:
-        Get all availabilities of a practitioner in the specified date
+      description: Get all availabilities of a practitioner in the specified date
         range, max 100 days
       summary: Get all availabilities of a practitioner
       security:
@@ -3673,7 +3814,7 @@ paths:
                         date:
                           type: string
                           description: Availability date
-                          example: "2024-01-04"
+                          example: 2024-01-04
                         locationId:
                           type: integer
                           minimum: 0
@@ -3689,7 +3830,7 @@ paths:
                           type: string
                           pattern: ^(\d{2}):(\d{2})$
                           description: End time of the availability
-                          example: "16:00"
+                          example: 17:00
                         repeatInterval:
                           type: string
                           nullable: true
@@ -3706,3 +3847,564 @@ paths:
                         - repeatInterval
                 required:
                   - data
+  /payments:
+    get:
+      tags:
+        - payment
+      description: Get a paged array of payments
+      summary: Get a paged array of payments
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for payments of this patient
+            example: 1
+          required: false
+          name: patientId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for payments created at this location
+            example: 1
+          required: false
+          name: locationId
+          in: query
+      responses:
+        "200":
+          description: A paged array of payments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Payment id
+                          example: 1
+                        paymentNumber:
+                          type: string
+                          description: Payment number
+                          example: RCPT-0001
+                        amount:
+                          type: number
+                          nullable: true
+                          description: Total payment amount. 0 for credit allocation
+                          example: 193.99
+                        patientId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The payment patient id
+                          example: 1
+                        locationId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The payment location id
+                          example: 1
+                        paymentMethodId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The payment method id, null for credit allocation
+                          example: 1
+                        paymentDate:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Payment date
+                          example: 2023-07-30T09:00:00Z
+                        paymentInvoices:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              invoiceId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Invoice id
+                                example: 1
+                              amount:
+                                type: number
+                                nullable: true
+                                description: Amount paid
+                                example: 193.99
+                              xeroId:
+                                type: string
+                                nullable: true
+                                format: uuid
+                                description: Xero payment id
+                            required:
+                              - invoiceId
+                              - amount
+                              - xeroId
+                          description: Payments made to invoices
+                        creditAllocations:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              invoiceId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Invoice id
+                                example: 1
+                              amount:
+                                type: number
+                                nullable: true
+                                description: Amount paid
+                                example: 193.99
+                            required:
+                              - invoiceId
+                              - amount
+                          description: Credit allocated to invoices
+                          example: &a18 []
+                        xeroId:
+                          type: string
+                          nullable: true
+                          format: uuid
+                          description: Xero batch payment id
+                        archivedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          description: Payment archive date time
+                      required:
+                        - id
+                        - paymentNumber
+                        - amount
+                        - patientId
+                        - locationId
+                        - paymentMethodId
+                        - paymentDate
+                        - paymentInvoices
+                        - creditAllocations
+                        - xeroId
+                        - archivedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+    post:
+      tags:
+        - payment
+      description: Create one payment for specific invoice
+      summary: Create one payment for specific invoice
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patientId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: Patient id
+                  example: 1
+                locationId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: Location id
+                  example: 1
+                paymentMethodId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: Payment method id
+                  example: 1
+                amount:
+                  type: number
+                  nullable: true
+                  description: Total payment amount, it should be the same as the sum of all
+                    paymentInvoice amount
+                  example: 193.99
+                paymentDate:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Payment date
+                  example: 2024-03-01
+                paymentInvoices:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      invoiceId:
+                        type: integer
+                        minimum: 0
+                        exclusiveMinimum: true
+                        description: Invoice id
+                        example: 1
+                      amount:
+                        type: number
+                        nullable: true
+                        description: Amount paid
+                        example: 193.99
+                      xeroId:
+                        type: string
+                        description: Xero payment id, only applicable for Xero payment
+                    required:
+                      - invoiceId
+                      - amount
+                  description: Payments made to invoices
+                xeroId:
+                  type: string
+                  format: uuid
+                  description: Xero batch payment id, only applicable for Xero batch payment
+              required:
+                - patientId
+                - locationId
+                - paymentMethodId
+                - amount
+                - paymentDate
+                - paymentInvoices
+      responses:
+        "200":
+          description: Object with payment data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Payment id
+                    example: 1
+                  paymentNumber:
+                    type: string
+                    description: Payment number
+                    example: RCPT-0001
+                  amount:
+                    type: number
+                    nullable: true
+                    description: Total payment amount. 0 for credit allocation
+                    example: 193.99
+                  patientId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The payment patient id
+                    example: 1
+                  locationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The payment location id
+                    example: 1
+                  paymentMethodId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The payment method id, null for credit allocation
+                    example: 1
+                  paymentDate:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Payment date
+                    example: 2023-07-30T09:00:00Z
+                  paymentInvoices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        invoiceId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id
+                          example: 1
+                        amount:
+                          type: number
+                          nullable: true
+                          description: Amount paid
+                          example: 193.99
+                        xeroId:
+                          type: string
+                          nullable: true
+                          format: uuid
+                          description: Xero payment id
+                      required:
+                        - invoiceId
+                        - amount
+                        - xeroId
+                    description: Payments made to invoices
+                  creditAllocations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        invoiceId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id
+                          example: 1
+                        amount:
+                          type: number
+                          nullable: true
+                          description: Amount paid
+                          example: 193.99
+                      required:
+                        - invoiceId
+                        - amount
+                    description: Credit allocated to invoices
+                    example: *a18
+                  xeroId:
+                    type: string
+                    nullable: true
+                    format: uuid
+                    description: Xero batch payment id
+                  archivedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Payment archive date time
+                required:
+                  - id
+                  - paymentNumber
+                  - amount
+                  - patientId
+                  - locationId
+                  - paymentMethodId
+                  - paymentDate
+                  - paymentInvoices
+                  - creditAllocations
+                  - xeroId
+                  - archivedAt
+  "/payments/{id}":
+    get:
+      tags:
+        - payment
+      description: Get payment data by id
+      summary: Get a single payment
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with payment data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Payment id
+                    example: 1
+                  paymentNumber:
+                    type: string
+                    description: Payment number
+                    example: RCPT-0001
+                  amount:
+                    type: number
+                    nullable: true
+                    description: Total payment amount. 0 for credit allocation
+                    example: 193.99
+                  patientId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The payment patient id
+                    example: 1
+                  locationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The payment location id
+                    example: 1
+                  paymentMethodId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The payment method id, null for credit allocation
+                    example: 1
+                  paymentDate:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Payment date
+                    example: 2023-07-30T09:00:00Z
+                  paymentInvoices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        invoiceId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id
+                          example: 1
+                        amount:
+                          type: number
+                          nullable: true
+                          description: Amount paid
+                          example: 193.99
+                        xeroId:
+                          type: string
+                          nullable: true
+                          format: uuid
+                          description: Xero payment id
+                      required:
+                        - invoiceId
+                        - amount
+                        - xeroId
+                    description: Payments made to invoices
+                  creditAllocations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        invoiceId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id
+                          example: 1
+                        amount:
+                          type: number
+                          nullable: true
+                          description: Amount paid
+                          example: 193.99
+                      required:
+                        - invoiceId
+                        - amount
+                    description: Credit allocated to invoices
+                    example: *a18
+                  xeroId:
+                    type: string
+                    nullable: true
+                    format: uuid
+                    description: Xero batch payment id
+                  archivedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Payment archive date time
+                required:
+                  - id
+                  - paymentNumber
+                  - amount
+                  - patientId
+                  - locationId
+                  - paymentMethodId
+                  - paymentDate
+                  - paymentInvoices
+                  - creditAllocations
+                  - xeroId
+                  - archivedAt
+  "/payments/{paymentId}":
+    delete:
+      tags:
+        - payment
+      description: Delete one payment by ID
+      summary: Delete one payment by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Return 1 on success
+          content:
+            text:
+              schema:
+                type: number
+                enum:
+                  - 1

@@ -80,9 +80,25 @@
           ]
         },
         {
+          "group": "Payment method",
+          "pages": [
+            "api-reference/endpoints/payment-method/get-a-paged-array-of-payment-methods",
+            "api-reference/endpoints/payment-method/get-a-single-payment-method"
+          ]
+        },
+        {
           "group": "Availability",
           "pages": [
             "api-reference/endpoints/availability/get-all-availabilities-of-a-practitioner"
+          ]
+        },
+        {
+          "group": "Payment",
+          "pages": [
+            "api-reference/endpoints/payment/get-a-paged-array-of-payments",
+            "api-reference/endpoints/payment/create-one-payment-for-specific-invoice",
+            "api-reference/endpoints/payment/get-a-single-payment",
+            "api-reference/endpoints/payment/delete-one-payment-by-id"
           ]
         }
       ]
