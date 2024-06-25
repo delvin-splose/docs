@@ -408,6 +408,46 @@ paths:
                           nullable: true
                           description: Patient NDIS number
                           example: "430123456"
+                        ndisInfo:
+                          type: object
+                          nullable: true
+                          properties:
+                            diagnosis:
+                              type: string
+                              nullable: true
+                              description: NDIS Diagnosis
+                              example: Foot Injury
+                            nomineeEmail:
+                              type: string
+                              nullable: true
+                              format: email
+                              description: Nominee email
+                              example: nominee@email.com
+                            fundManagement:
+                              type: string
+                              nullable: true
+                              description: NDIS fund management type
+                              example: Plan-managed
+                            nomineeLastName:
+                              type: string
+                              nullable: true
+                              description: Last name of nominee
+                              example: Clark
+                            nomineeFirstName:
+                              type: string
+                              nullable: true
+                              description: First name of nominee
+                              example: Chris
+                            nomineeMobileCode:
+                              type: string
+                              nullable: true
+                              description: Nominee phone country code
+                              example: "+61"
+                            nomineeMobileNumber:
+                              type: string
+                              nullable: true
+                              description: Nominee phone number
+                              example: "433555111"
                         medicareNum:
                           type: string
                           nullable: true
@@ -450,6 +490,19 @@ paths:
                           nullable: true
                           default: false
                           description: Whether the patient has been archived
+                        customFields:
+                          type: array
+                          nullable: true
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: string
+                            required:
+                              - name
+                              - value
                         createdAt:
                           anyOf:
                             - type: string
@@ -704,6 +757,46 @@ paths:
                     nullable: true
                     description: Patient NDIS number
                     example: "430123456"
+                  ndisInfo:
+                    type: object
+                    nullable: true
+                    properties:
+                      diagnosis:
+                        type: string
+                        nullable: true
+                        description: NDIS Diagnosis
+                        example: Foot Injury
+                      nomineeEmail:
+                        type: string
+                        nullable: true
+                        format: email
+                        description: Nominee email
+                        example: nominee@email.com
+                      fundManagement:
+                        type: string
+                        nullable: true
+                        description: NDIS fund management type
+                        example: Plan-managed
+                      nomineeLastName:
+                        type: string
+                        nullable: true
+                        description: Last name of nominee
+                        example: Clark
+                      nomineeFirstName:
+                        type: string
+                        nullable: true
+                        description: First name of nominee
+                        example: Chris
+                      nomineeMobileCode:
+                        type: string
+                        nullable: true
+                        description: Nominee phone country code
+                        example: "+61"
+                      nomineeMobileNumber:
+                        type: string
+                        nullable: true
+                        description: Nominee phone number
+                        example: "433555111"
                   medicareNum:
                     type: string
                     nullable: true
@@ -745,6 +838,19 @@ paths:
                     nullable: true
                     default: false
                     description: Whether the patient has been archived
+                  customFields:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                        - name
+                        - value
                   createdAt:
                     anyOf:
                       - type: string
@@ -2046,6 +2152,13 @@ paths:
                                 nullable: true
                                 description: The cancellation note if the appointment is cancelled
                                 example: Some notes
+                              statusUpdatedAt:
+                                anyOf:
+                                  - type: string
+                                  - type: string
+                                  - nullable: true
+                                description: The status update time
+                                example: 2023-07-30T09:00:00Z
                             required:
                               - appointmentId
                               - patientId
@@ -2054,6 +2167,7 @@ paths:
                               - invoiceId
                               - cancellationReason
                               - cancellationNote
+                              - statusUpdatedAt
                           description: The status of each patient of this appointment
                         repeatId:
                           type: string
@@ -2282,6 +2396,13 @@ paths:
                           nullable: true
                           description: The cancellation note if the appointment is cancelled
                           example: Some notes
+                        statusUpdatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          description: The status update time
+                          example: 2023-07-30T09:00:00Z
                       required:
                         - appointmentId
                         - patientId
@@ -2290,6 +2411,7 @@ paths:
                         - invoiceId
                         - cancellationReason
                         - cancellationNote
+                        - statusUpdatedAt
                     description: The status of each patient of this appointment
                   repeatId:
                     type: string
@@ -3754,6 +3876,1373 @@ paths:
                   - name
                   - description
                   - xeroAccountCode
+  /waitlists:
+    get:
+      tags:
+        - waitlist
+      description: Get a paged array of waitlists
+      summary: Get a paged array of waitlists
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The id of the practitioner associated to the waitlist item
+            example: 12
+          required: false
+          name: practitionerId
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The user group id of the practitioner associated to the waitlist
+              item
+            example: 12
+          required: false
+          name: userGroupId
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The id of the location associated to the waitlist item
+            example: 13
+          required: false
+          name: locationId
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The id of the patient associated to the waitlist item
+            example: 14
+          required: false
+          name: patientId
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
+            description: Search for waitlist item added after specified date
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: dateAddedGt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
+            description: Search for waitlist item added before specified date
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: dateAddedLt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum:
+              - "true"
+              - "false"
+            description: Is the waitlist item active or closed
+            example: true
+          required: false
+          name: isActive
+          in: query
+        - schema:
+            type: array
+            nullable: true
+            items:
+              type: string
+          required: false
+          name: preferredDays
+          in: query
+        - schema:
+            type: string
+            nullable: true
+          required: false
+          name: preferredTime
+          in: query
+        - schema:
+            type: array
+            nullable: true
+            items:
+              type: number
+          required: false
+          name: serviceIds
+          in: query
+        - schema:
+            type: array
+            nullable: true
+            items:
+              type: string
+          required: false
+          name: waitlistTags
+          in: query
+      responses:
+        "200":
+          description: A paged array of waitlists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Waitlist Item Id
+                          example: 1
+                        practitionerId:
+                          type: integer
+                          nullable: true
+                          description: The id of the practitioner associated to the waitlist item
+                          example: 12
+                        userGroupId:
+                          type: integer
+                          nullable: true
+                          description: The id of the practitioner group associated to the waitlist item
+                          example: 12
+                        locationId:
+                          type: integer
+                          nullable: true
+                          description: The id of the location associated to the waitlist item
+                          example: 13
+                        patientId:
+                          type: integer
+                          nullable: true
+                          description: The id of the patient associated to the waitlist item
+                          example: 14
+                        serviceIds:
+                          type: array
+                          nullable: true
+                          items:
+                            type: number
+                          description: The id list of services the waitlist item is waiting for
+                          example: &a18
+                            - 1
+                            - 2
+                            - 3
+                        preferredDays:
+                          type: array
+                          items:
+                            type: string
+                          description: Preferred days of the waitlist item
+                          example: &a19
+                            - Monday
+                            - Tuesday
+                        preferredTime:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                          description: Preferred time of service for the waitlist item
+                          example: &a20
+                            - morning
+                            - afternoon
+                            - evening
+                        waitlistTags:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                          description: The waitlist tag ids of the waitlist item
+                          example: &a21
+                            - High
+                            - Medium
+                            - Low
+                        createdAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - practitionerId
+                        - userGroupId
+                        - locationId
+                        - patientId
+                        - serviceIds
+                        - preferredDays
+                        - waitlistTags
+                        - createdAt
+                        - updatedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/waitlists/{id}":
+    get:
+      tags:
+        - waitlist
+      description: Get waitlist data by id
+      summary: Get a single waitlist
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with waitlist data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Waitlist Item Id
+                    example: 1
+                  practitionerId:
+                    type: integer
+                    nullable: true
+                    description: The id of the practitioner associated to the waitlist item
+                    example: 12
+                  userGroupId:
+                    type: integer
+                    nullable: true
+                    description: The id of the practitioner group associated to the waitlist item
+                    example: 12
+                  locationId:
+                    type: integer
+                    nullable: true
+                    description: The id of the location associated to the waitlist item
+                    example: 13
+                  patientId:
+                    type: integer
+                    nullable: true
+                    description: The id of the patient associated to the waitlist item
+                    example: 14
+                  serviceIds:
+                    type: array
+                    nullable: true
+                    items:
+                      type: number
+                    description: The id list of services the waitlist item is waiting for
+                    example: *a18
+                  preferredDays:
+                    type: array
+                    items:
+                      type: string
+                    description: Preferred days of the waitlist item
+                    example: *a19
+                  preferredTime:
+                    type: array
+                    nullable: true
+                    items:
+                      type: string
+                    description: Preferred time of service for the waitlist item
+                    example: *a20
+                  waitlistTags:
+                    type: array
+                    nullable: true
+                    items:
+                      type: string
+                    description: The waitlist tag ids of the waitlist item
+                    example: *a21
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - practitionerId
+                  - userGroupId
+                  - locationId
+                  - patientId
+                  - serviceIds
+                  - preferredDays
+                  - waitlistTags
+                  - createdAt
+                  - updatedAt
+  /screeners:
+    get:
+      tags:
+        - screener
+      description: Get a paged array of screeners
+      summary: Get a paged array of screeners
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
+            description: Search for screener item added after specified date
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: create_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
+            description: Search for screener item added before specified date
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: create_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum:
+              - "true"
+              - "false"
+            description: Is the screener accepted or rejected
+            example: true
+          required: false
+          name: isAccepted
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum:
+              - "true"
+              - "false"
+            description: Is the screener item active or closed
+            example: true
+          required: false
+          name: isTriaging
+          in: query
+        - schema:
+            type: array
+            nullable: true
+            items:
+              type: number
+          required: false
+          name: formIds
+          in: query
+        - schema:
+            type: array
+            nullable: true
+            items:
+              type: string
+          required: false
+          name: screenerTags
+          in: query
+      responses:
+        "200":
+          description: A paged array of screeners
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Screener Item Id
+                          example: 1
+                        patientId:
+                          type: integer
+                          nullable: true
+                          description: The id of the patient associated to the screener item
+                          example: 14
+                        triaging:
+                          type: boolean
+                          nullable: true
+                          description: Is the screener item active or closed
+                          example: true
+                        formId:
+                          type: number
+                          description: The form template id in which the screener item is created from
+                          example: 1
+                        screenerTags:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                          description: The screener tag ids of the screener item
+                          example: &a22
+                            - High
+                            - Medium
+                            - Low
+                        createdAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - patientId
+                        - formId
+                        - screenerTags
+                        - createdAt
+                        - updatedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/screeners/{id}":
+    get:
+      tags:
+        - screener
+      description: Get screener data by id
+      summary: Get a single screener
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with screener data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Screener Item Id
+                    example: 1
+                  patientId:
+                    type: integer
+                    nullable: true
+                    description: The id of the patient associated to the screener item
+                    example: 14
+                  triaging:
+                    type: boolean
+                    nullable: true
+                    description: Is the screener item active or closed
+                    example: true
+                  formId:
+                    type: number
+                    description: The form template id in which the screener item is created from
+                    example: 1
+                  screenerTags:
+                    type: array
+                    nullable: true
+                    items:
+                      type: string
+                    description: The screener tag ids of the screener item
+                    example: *a22
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - patientId
+                  - formId
+                  - screenerTags
+                  - createdAt
+                  - updatedAt
+  /patient-forms:
+    get:
+      tags:
+        - patient-form
+      description: Get a paged array of patient-forms
+      summary: Get a paged array of patient-forms
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Patient id
+            example: 1
+          required: false
+          name: patientId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Template id
+            example: 1
+          required: false
+          name: templateId
+          in: query
+      responses:
+        "200":
+          description: A paged array of patient-forms
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient Form Id
+                          example: 1
+                        title:
+                          type: string
+                          description: Form Title
+                          example: Form Title
+                        uuid:
+                          type: string
+                          format: uuid
+                          description: uuid
+                          example: e2753e11-22a2-4886-be76-df5113632f0d
+                        brandingColor:
+                          type: string
+                          nullable: true
+                          description: Branding color
+                          example: blue
+                        headerImage:
+                          type: string
+                          nullable: true
+                          description: Link of the image
+                          example: https://sampleImage.com
+                        content:
+                          type: string
+                          description: Content of form
+                          example: '[{"title":"Section
+                            title","questions":[{"type":"Paragraph","title":"Paragraph
+                            title","answerText":""}]}]}]'
+                        submittedMessage:
+                          type: string
+                          nullable: true
+                          description: Submitted message
+                          example: Message
+                        submittedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          description: Submitted time in YYYY:MM:DD HH:mm:ss format
+                          example: 1990:01:01 12:20:52
+                        patientId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient id
+                          example: 1
+                        organisationId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Organisation id
+                          example: 1
+                        appointmentId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Appointment id
+                          example: 1
+                        status:
+                          type: string
+                          enum: &a23
+                            - Incomplete
+                            - In progress
+                            - Completed
+                          description: Status
+                          example: Completed
+                        templateId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Template id
+                          example: 1
+                        createdAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - submittedAt
+                        - patientId
+                        - organisationId
+                        - appointmentId
+                        - templateId
+                        - createdAt
+                        - updatedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/patient-forms/{id}":
+    get:
+      tags:
+        - patient-form
+      description: Get patient-form data by id
+      summary: Get a single patient-form
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with patient-form data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient Form Id
+                    example: 1
+                  title:
+                    type: string
+                    description: Form Title
+                    example: Form Title
+                  uuid:
+                    type: string
+                    format: uuid
+                    description: uuid
+                    example: e2753e11-22a2-4886-be76-df5113632f0d
+                  brandingColor:
+                    type: string
+                    nullable: true
+                    description: Branding color
+                    example: blue
+                  headerImage:
+                    type: string
+                    nullable: true
+                    description: Link of the image
+                    example: https://sampleImage.com
+                  content:
+                    type: string
+                    description: Content of form
+                    example: '[{"title":"Section
+                      title","questions":[{"type":"Paragraph","title":"Paragraph
+                      title","answerText":""}]}]}]'
+                  submittedMessage:
+                    type: string
+                    nullable: true
+                    description: Submitted message
+                    example: Message
+                  submittedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Submitted time in YYYY:MM:DD HH:mm:ss format
+                    example: 1990:01:01 12:20:52
+                  patientId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient id
+                    example: 1
+                  organisationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Organisation id
+                    example: 1
+                  appointmentId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Appointment id
+                    example: 1
+                  status:
+                    type: string
+                    enum: *a23
+                    description: Status
+                    example: Completed
+                  templateId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Template id
+                    example: 1
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - submittedAt
+                  - patientId
+                  - organisationId
+                  - appointmentId
+                  - templateId
+                  - createdAt
+                  - updatedAt
+  /cases:
+    get:
+      tags:
+        - case
+      description: Get a paged array of cases
+      summary: Get a paged array of cases
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: false
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Patient id
+            example: 1
+          required: false
+          name: patientId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Practitioner id
+            example: 1
+          required: false
+          name: practitionerId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Contact id
+            example: 1
+          required: false
+          name: contactId
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum:
+              - Appointments
+              - Hours
+              - Budget
+            description: Track type
+            example: Budget
+          required: false
+          name: trackType
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum:
+              - Open
+              - Closed
+              - Expired
+            description: Status
+            example: Open
+          required: false
+          name: status
+          in: query
+      responses:
+        "200":
+          description: A paged array of cases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Case id
+                          example: 1
+                        caseNumber:
+                          type: string
+                          description: Case number
+                          example: "0002"
+                        budget:
+                          type: number
+                          nullable: true
+                          description: Budget
+                          example: 200
+                        appointmentCount:
+                          type: number
+                          nullable: true
+                          description: Appointment count
+                          example: 12
+                        contactId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Contact Id
+                          example: 1
+                        providerNumber:
+                          type: string
+                          nullable: true
+                          description: Provider number
+                          example: "1512"
+                        referralPeriod:
+                          type: string
+                          nullable: true
+                          description: Referral Period
+                          example: Standard
+                        issueDate:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          description: Issued date in YYYY-MM-DD HH:MM:SS format
+                          example: 2024-06-09 14:30:00
+                        expiryDate:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          description: Expiry date in YYYY-MM-DD HH:MM:SS format
+                          example: 2024-06-25 14:29:59
+                        notes:
+                          type: string
+                          nullable: true
+                          description: Notes
+                          example: Notes
+                        trackType:
+                          type: string
+                          description: Track type
+                          example: Budget
+                        hours:
+                          type: number
+                          nullable: true
+                          description: hours
+                          example: 32
+                        includeDidNotArrive:
+                          type: boolean
+                          nullable: true
+                          description: Did not arrive
+                          example: true
+                        includeCancelled:
+                          type: boolean
+                          nullable: true
+                          description: Include cancelled
+                          example: true
+                        practitionerId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Practitioner id
+                          example: 1
+                        organisationId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Organisation id
+                          example: 1
+                        patientId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient id
+                          example: 2
+                        isOpen:
+                          type: boolean
+                          nullable: true
+                          description: Is open
+                          example: true
+                        hasAlert:
+                          type: boolean
+                          nullable: true
+                          description: Has alert
+                          example: true
+                        remindTime:
+                          type: string
+                          nullable: true
+                          description: Remind time
+                          example: Time
+                        utilisationAlert:
+                          type: number
+                          nullable: true
+                          description: Utilisation alert
+                          example: 1
+                        isAlertUtilizationSent:
+                          type: boolean
+                          nullable: true
+                          description: Is alert utilization sent
+                          example: true
+                        createdAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - contactId
+                        - issueDate
+                        - expiryDate
+                        - hours
+                        - practitionerId
+                        - organisationId
+                        - patientId
+                        - createdAt
+                        - updatedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/cases/{id}":
+    get:
+      tags:
+        - case
+      description: Get case data by id
+      summary: Get a single case
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with case data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Case id
+                    example: 1
+                  caseNumber:
+                    type: string
+                    description: Case number
+                    example: "0002"
+                  budget:
+                    type: number
+                    nullable: true
+                    description: Budget
+                    example: 200
+                  appointmentCount:
+                    type: number
+                    nullable: true
+                    description: Appointment count
+                    example: 12
+                  contactId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Contact Id
+                    example: 1
+                  providerNumber:
+                    type: string
+                    nullable: true
+                    description: Provider number
+                    example: "1512"
+                  referralPeriod:
+                    type: string
+                    nullable: true
+                    description: Referral Period
+                    example: Standard
+                  issueDate:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Issued date in YYYY-MM-DD HH:MM:SS format
+                    example: 2024-06-09 14:30:00
+                  expiryDate:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Expiry date in YYYY-MM-DD HH:MM:SS format
+                    example: 2024-06-25 14:29:59
+                  notes:
+                    type: string
+                    nullable: true
+                    description: Notes
+                    example: Notes
+                  trackType:
+                    type: string
+                    description: Track type
+                    example: Budget
+                  hours:
+                    type: number
+                    nullable: true
+                    description: hours
+                    example: 32
+                  includeDidNotArrive:
+                    type: boolean
+                    nullable: true
+                    description: Did not arrive
+                    example: true
+                  includeCancelled:
+                    type: boolean
+                    nullable: true
+                    description: Include cancelled
+                    example: true
+                  practitionerId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Practitioner id
+                    example: 1
+                  organisationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Organisation id
+                    example: 1
+                  patientId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient id
+                    example: 2
+                  isOpen:
+                    type: boolean
+                    nullable: true
+                    description: Is open
+                    example: true
+                  hasAlert:
+                    type: boolean
+                    nullable: true
+                    description: Has alert
+                    example: true
+                  remindTime:
+                    type: string
+                    nullable: true
+                    description: Remind time
+                    example: Time
+                  utilisationAlert:
+                    type: number
+                    nullable: true
+                    description: Utilisation alert
+                    example: 1
+                  isAlertUtilizationSent:
+                    type: boolean
+                    nullable: true
+                    description: Is alert utilization sent
+                    example: true
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - contactId
+                  - issueDate
+                  - expiryDate
+                  - hours
+                  - practitionerId
+                  - organisationId
+                  - patientId
+                  - createdAt
+                  - updatedAt
   "/availabilities/{practitionerId}":
     get:
       tags:
@@ -4014,7 +5503,7 @@ paths:
                               - invoiceId
                               - amount
                           description: Credit allocated to invoices
-                          example: &a18 []
+                          example: &a24 []
                         xeroId:
                           type: string
                           nullable: true
@@ -4223,7 +5712,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a18
+                    example: *a24
                   xeroId:
                     type: string
                     nullable: true
@@ -4358,7 +5847,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a18
+                    example: *a24
                   xeroId:
                     type: string
                     nullable: true
