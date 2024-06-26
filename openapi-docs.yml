@@ -448,6 +448,16 @@ paths:
                               nullable: true
                               description: Nominee phone number
                               example: "433555111"
+                            startDate:
+                              type: string
+                              nullable: true
+                              description: Plan start date
+                              example: 2024-02-09T00:00:00.000Z
+                            endDate:
+                              type: string
+                              nullable: true
+                              description: Plan end date
+                              example: 2024-02-18T00:00:00.000Z
                         medicareNum:
                           type: string
                           nullable: true
@@ -797,6 +807,16 @@ paths:
                         nullable: true
                         description: Nominee phone number
                         example: "433555111"
+                      startDate:
+                        type: string
+                        nullable: true
+                        description: Plan start date
+                        example: 2024-02-09T00:00:00.000Z
+                      endDate:
+                        type: string
+                        nullable: true
+                        description: Plan end date
+                        example: 2024-02-18T00:00:00.000Z
                   medicareNum:
                     type: string
                     nullable: true
@@ -4978,6 +4998,10 @@ paths:
                           example: Notes
                         trackType:
                           type: string
+                          enum: &a24
+                            - Appointments
+                            - Hours
+                            - Budget
                           description: Track type
                           example: Budget
                         hours:
@@ -5159,6 +5183,7 @@ paths:
                     example: Notes
                   trackType:
                     type: string
+                    enum: *a24
                     description: Track type
                     example: Budget
                   hours:
@@ -5503,7 +5528,7 @@ paths:
                               - invoiceId
                               - amount
                           description: Credit allocated to invoices
-                          example: &a24 []
+                          example: &a25 []
                         xeroId:
                           type: string
                           nullable: true
@@ -5712,7 +5737,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a24
+                    example: *a25
                   xeroId:
                     type: string
                     nullable: true
@@ -5847,7 +5872,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a24
+                    example: *a25
                   xeroId:
                     type: string
                     nullable: true
