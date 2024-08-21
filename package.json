@@ -5,7 +5,7 @@
     "generate": "rm -rf api-reference/endpoints && mintlify-scrape openapi-file openapi-docs.yml -o api-reference/endpoints"
   },
   "dependencies": {
-    "@mintlify/scraping": "~3.0.63",
-    "mintlify": "~4.0.59"
+    "@mintlify/scraping": "~3.0.150",
+    "mintlify": "~4.0.205"
   }
 }
