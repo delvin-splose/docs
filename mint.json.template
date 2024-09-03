@@ -1,19 +1,13 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "splose API Documentation",
-  "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
-  },
+  "logo": "/logo/light.svg",
   "favicon": "/logo/favicon.png",
   "colors": {
-    "primary": "#1355ff",
-    "light": "#00a6fb",
-    "dark": "#1355ff",
-    "anchors": {
-      "from": "#00a6fb",
-      "to": "#1355ff"
-    }
+    "primary": "#216947",
+    "light": "#216947",
+    "dark": "#216947",
+    "background": { "light": "#f5f5e1" }
   },
   "topbarCtaButton": {
     "name": "Login",
@@ -24,7 +18,7 @@
       "name": "Blog",
       "icon": "newspaper",
       "url": "https://splose.com/blog",
-      "color": "#00b4d8"
+      "color": "#216947"
     }
   ],
   "navigation": [

@@ -165,7 +165,7 @@ paths:
             enum: &a4
               - "true"
               - "false"
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -364,6 +364,7 @@ paths:
                                 example: "+61"
                               phoneNumber:
                                 type: string
+                                nullable: true
                                 description: Phone number
                                 example: "401234567"
                             required:
@@ -377,6 +378,7 @@ paths:
                             - No response
                             - Accepted
                             - Rejected
+                            - ""
                           description: Patient privacy policy status
                           example: Accepted
                         healthFund:
@@ -420,7 +422,6 @@ paths:
                             nomineeEmail:
                               type: string
                               nullable: true
-                              format: email
                               description: Nominee email
                               example: nominee@email.com
                             fundManagement:
@@ -509,7 +510,9 @@ paths:
                               name:
                                 type: string
                               value:
-                                type: string
+                                anyOf:
+                                  - type: string
+                                  - type: number
                             required:
                               - name
                               - value
@@ -726,6 +729,7 @@ paths:
                           example: "+61"
                         phoneNumber:
                           type: string
+                          nullable: true
                           description: Phone number
                           example: "401234567"
                       required:
@@ -779,7 +783,6 @@ paths:
                       nomineeEmail:
                         type: string
                         nullable: true
-                        format: email
                         description: Nominee email
                         example: nominee@email.com
                       fundManagement:
@@ -867,7 +870,9 @@ paths:
                         name:
                           type: string
                         value:
-                          type: string
+                          anyOf:
+                            - type: string
+                            - type: number
                       required:
                         - name
                         - value
@@ -965,7 +970,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -1366,7 +1371,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -1666,7 +1671,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -1702,7 +1707,7 @@ paths:
               - "true"
               - "false"
             description: Whether the practitioner is active
-            example: true
+            example: "true"
           required: false
           name: isActive
           in: query
@@ -2017,21 +2022,10 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
-          in: query
-        - schema:
-            type: string
-            nullable: true
-            enum: &a10
-              - Arrived
-              - Did not arrive
-              - Cancelled
-            description: Patient status of this appointment
-          required: false
-          name: status
           in: query
         - schema:
             anyOf:
@@ -2060,6 +2054,37 @@ paths:
             example: 1
           required: false
           name: patientId
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: &a10
+              - Arrived
+              - Did not arrive
+              - Cancelled
+            description: Patient status of this appointment
+          required: false
+          name: status
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
+            description: Search for appointments status update after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: status_update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
+            description: Search for appointments status update before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: status_update_lt
           in: query
       responses:
         "200":
@@ -2520,6 +2545,52 @@ paths:
                   - createdAt
                   - updatedAt
                   - deletedAt
+    put:
+      tags:
+        - appointment
+      description: Update start and end for one appointment
+      summary: Update start and end for one appointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Appointment start date time (UTC)
+                  example: 2024-08-28 01:15:00
+                end:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Appointment end date time (UTC)
+                  example: 2024-09-22 11:45:00
+              required:
+                - start
+                - end
+      responses:
+        "200":
+          description: Return 1 on success
+          content:
+            text:
+              schema:
+                type: number
+                enum:
+                  - 1
   /support-activities:
     get:
       tags:
@@ -2567,7 +2638,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -2967,7 +3038,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -3249,7 +3320,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -3943,7 +4014,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -4008,7 +4079,7 @@ paths:
               - "true"
               - "false"
             description: Is the waitlist item active or closed
-            example: true
+            example: "true"
           required: false
           name: isActive
           in: query
@@ -4304,7 +4375,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -4336,7 +4407,7 @@ paths:
               - "true"
               - "false"
             description: Is the screener accepted or rejected
-            example: true
+            example: "true"
           required: false
           name: isAccepted
           in: query
@@ -4347,7 +4418,7 @@ paths:
               - "true"
               - "false"
             description: Is the screener item active or closed
-            example: true
+            example: "true"
           required: false
           name: isTriaging
           in: query
@@ -4561,7 +4632,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -4874,7 +4945,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -5408,7 +5479,7 @@ paths:
             type: string
             nullable: true
             enum: *a4
-            default: false
+            default: "false"
             description: Whether archived objects should be retrieved, default is false
           required: false
           name: include_archived
@@ -5913,6 +5984,58 @@ paths:
           required: true
           name: id
           in: path
+      responses:
+        "200":
+          description: Return 1 on success
+          content:
+            text:
+              schema:
+                type: number
+                enum:
+                  - 1
+  "/support-Items/{id}":
+    put:
+      tags:
+        - support-item
+      description: Update one support-item
+      summary: Update one support-item
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - Provider Travel
+                    - Provider Travel - Non-Labour Costs
+                    - Activity Based Transport
+                  description: Support item type
+                  example: Provider Travel
+                toMinutes:
+                  type: integer
+                  nullable: true
+                  description: Minutes spent on travelling to the patient for provider travel
+                  example: 20
+                returnMinutes:
+                  type: integer
+                  nullable: true
+                  description: Minutes spent traveling from the patient for provider travel
+                  example: 20
+              required:
+                - type
       responses:
         "200":
           description: Return 1 on success
