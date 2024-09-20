@@ -2148,6 +2148,13 @@ paths:
                           default: 1
                           description: The max patient number of this appointment. A number greater than 1
                             indicates a group appointment.
+                        caseId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The case id of this appointment
+                          example: 1
                         appointmentPatients:
                           type: array
                           items:
@@ -2292,6 +2299,7 @@ paths:
                         - locationId
                         - practitionerId
                         - maxPatients
+                        - caseId
                         - appointmentPatients
                         - repeatId
                         - recurringRule
@@ -2392,6 +2400,13 @@ paths:
                     default: 1
                     description: The max patient number of this appointment. A number greater than 1
                       indicates a group appointment.
+                  caseId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The case id of this appointment
+                    example: 1
                   appointmentPatients:
                     type: array
                     items:
@@ -2533,6 +2548,7 @@ paths:
                   - locationId
                   - practitionerId
                   - maxPatients
+                  - caseId
                   - appointmentPatients
                   - repeatId
                   - recurringRule
@@ -2722,6 +2738,13 @@ paths:
                           exclusiveMinimum: true
                           description: The location id of this support activity
                           example: 1
+                        caseId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The case id of this support activity
+                          example: 1
                         note:
                           type: string
                           nullable: true
@@ -2804,6 +2827,7 @@ paths:
                         - practitionerId
                         - serviceId
                         - locationId
+                        - caseId
                         - note
                         - itemCode
                         - repeatId
@@ -2897,6 +2921,13 @@ paths:
                     exclusiveMinimum: true
                     description: The location id of this support activity
                     example: 1
+                  caseId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The case id of this support activity
+                    example: 1
                   note:
                     type: string
                     nullable: true
@@ -2979,6 +3010,7 @@ paths:
                   - practitionerId
                   - serviceId
                   - locationId
+                  - caseId
                   - note
                   - itemCode
                   - repeatId
@@ -5097,6 +5129,32 @@ paths:
                           exclusiveMinimum: true
                           description: Practitioner id
                           example: 1
+                        items:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              typeId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Item type id
+                                example: 1
+                              type:
+                                type: string
+                                enum: &a25
+                                  - Appointment
+                                  - SupportActivity
+                                  - File
+                                  - SupportingActivity
+                                  - Letter
+                                description: Item type
+                                example: Appointment
+                            required:
+                              - typeId
+                              - type
+                            additionalProperties: false
+                          description: An array of appointment connections associated with this case
                         organisationId:
                           type: integer
                           minimum: 0
@@ -5153,6 +5211,7 @@ paths:
                         - expiryDate
                         - hours
                         - practitionerId
+                        - items
                         - organisationId
                         - patientId
                         - createdAt
@@ -5279,6 +5338,27 @@ paths:
                     exclusiveMinimum: true
                     description: Practitioner id
                     example: 1
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Item type id
+                          example: 1
+                        type:
+                          type: string
+                          enum: *a25
+                          description: Item type
+                          example: Appointment
+                      required:
+                        - typeId
+                        - type
+                      additionalProperties: false
+                    description: An array of appointment connections associated with this case
                   organisationId:
                     type: integer
                     minimum: 0
@@ -5335,6 +5415,7 @@ paths:
                   - expiryDate
                   - hours
                   - practitionerId
+                  - items
                   - organisationId
                   - patientId
                   - createdAt
@@ -5599,7 +5680,7 @@ paths:
                               - invoiceId
                               - amount
                           description: Credit allocated to invoices
-                          example: &a25 []
+                          example: &a26 []
                         xeroId:
                           type: string
                           nullable: true
@@ -5808,7 +5889,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a25
+                    example: *a26
                   xeroId:
                     type: string
                     nullable: true
@@ -5943,7 +6024,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a25
+                    example: *a26
                   xeroId:
                     type: string
                     nullable: true
