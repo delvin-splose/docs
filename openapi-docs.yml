@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: splose public API
   description: >
-    
+
     Welcome to the splose API documentation. splose serves as a comprehensive Allied Health & NDIS practice management software designed to streamline administrative tasks and foster the growth of your practice.
 
 
@@ -286,6 +286,13 @@ paths:
                           nullable: true
                           description: Patient alert messages
                           example: He knows magic
+                        invoiceRecipientId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The invoice receipient (contact) id of this patient
+                          example: 1
                         birthdate:
                           type: string
                           nullable: true
@@ -540,6 +547,7 @@ paths:
                         - genderIdentity
                         - pronouns
                         - alert
+                        - invoiceRecipientId
                         - birthdate
                         - timezone
                         - extraInfo
@@ -656,6 +664,13 @@ paths:
                     nullable: true
                     description: Patient alert messages
                     example: He knows magic
+                  invoiceRecipientId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The invoice receipient (contact) id of this patient
+                    example: 1
                   birthdate:
                     type: string
                     nullable: true
@@ -900,6 +915,7 @@ paths:
                   - genderIdentity
                   - pronouns
                   - alert
+                  - invoiceRecipientId
                   - birthdate
                   - timezone
                   - extraInfo
@@ -921,6 +937,485 @@ paths:
                   - emergencyContactName
                   - emergencyContactRelationship
                   - patientTags
+                  - createdAt
+                  - updatedAt
+  /contacts:
+    get:
+      tags:
+        - contact
+      description: Get a paged array of contacts
+      summary: Get a paged array of contacts
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: "false"
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Contact firstname
+            example: Harry
+          required: false
+          name: firstname
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Contact lastname
+            example: Potter
+          required: false
+          name: lastname
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            format: email
+            description: Contact email
+            example: harry@hogwarts.edu
+          required: false
+          name: email
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Contact phone number without country code
+            example: "0412345678"
+          required: false
+          name: phoneNumber
+          in: query
+      responses:
+        "200":
+          description: A paged array of contacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Contact id
+                          example: 1
+                        type:
+                          type: string
+                          description: Contact type
+                          example: Standard
+                        title:
+                          type: string
+                          nullable: true
+                          description: Contact title
+                          example: Mr.
+                        firstName:
+                          type: string
+                          nullable: true
+                          description: Contact first name
+                          example: Harry
+                        lastName:
+                          type: string
+                          nullable: true
+                          description: Contact last name
+                          example: Potter
+                        preferredName:
+                          type: string
+                          nullable: true
+                          description: Contact preferred name
+                          example: Harry
+                        profession:
+                          type: string
+                          nullable: true
+                          description: Contact profession
+                          example: Contractor
+                        companyName:
+                          type: string
+                          nullable: true
+                          description: Contact company name
+                          example: splose
+                        providerNumber:
+                          type: string
+                          nullable: true
+                          description: Contact provider number
+                          example: "12345678"
+                        doctorType:
+                          type: string
+                          nullable: true
+                          enum: &a5
+                            - GP
+                            - Specialist
+                          description: Contact provider number
+                          example: GP
+                        associatedPatientIds:
+                          type: array
+                          nullable: true
+                          items:
+                            type: number
+                          description: The associated patients' id in this contact
+                        associatedInvoiceIds:
+                          type: array
+                          nullable: true
+                          items:
+                            type: number
+                          description: The associated invoices' id in this contact
+                        associatedCaseIds:
+                          type: array
+                          nullable: true
+                          items:
+                            type: number
+                          description: The associated invoices' id in this contact
+                        email:
+                          type: string
+                          nullable: true
+                          description: Contact email
+                          example: harry@hogwarts.edu
+                        addressL1:
+                          type: string
+                          nullable: true
+                          description: Contact address line 1
+                          example: 123 King William Street
+                        addressL2:
+                          type: string
+                          nullable: true
+                          description: Contact address line 2
+                          example: ""
+                        addressL3:
+                          type: string
+                          nullable: true
+                          description: Contact address line 3
+                          example: ""
+                        suburb:
+                          type: string
+                          nullable: true
+                          description: Contact city
+                          example: Adelaide
+                        state:
+                          type: string
+                          nullable: true
+                          description: Contact state
+                          example: SA
+                        postalCode:
+                          type: string
+                          nullable: true
+                          description: Contact post code
+                          example: "5000"
+                        country:
+                          type: string
+                          nullable: true
+                          description: Contact country
+                          example: Australia
+                        phoneNumbers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                                nullable: true
+                                enum: *a1
+                                description: Phone number type
+                                example: Mobile
+                              code:
+                                type: string
+                                nullable: true
+                                description: Phone country code
+                                example: "+61"
+                              phoneNumber:
+                                type: string
+                                nullable: true
+                                description: Phone number
+                                example: "401234567"
+                            required:
+                              - type
+                              - code
+                              - phoneNumber
+                        createdAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - type
+                        - title
+                        - firstName
+                        - lastName
+                        - preferredName
+                        - profession
+                        - companyName
+                        - providerNumber
+                        - doctorType
+                        - associatedPatientIds
+                        - associatedInvoiceIds
+                        - associatedCaseIds
+                        - email
+                        - addressL1
+                        - addressL2
+                        - addressL3
+                        - suburb
+                        - state
+                        - postalCode
+                        - country
+                        - createdAt
+                        - updatedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/contacts/{id}":
+    get:
+      tags:
+        - contact
+      description: Get contact data by id
+      summary: Get a single contact
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with contact data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Contact id
+                    example: 1
+                  type:
+                    type: string
+                    description: Contact type
+                    example: Standard
+                  title:
+                    type: string
+                    nullable: true
+                    description: Contact title
+                    example: Mr.
+                  firstName:
+                    type: string
+                    nullable: true
+                    description: Contact first name
+                    example: Harry
+                  lastName:
+                    type: string
+                    nullable: true
+                    description: Contact last name
+                    example: Potter
+                  preferredName:
+                    type: string
+                    nullable: true
+                    description: Contact preferred name
+                    example: Harry
+                  profession:
+                    type: string
+                    nullable: true
+                    description: Contact profession
+                    example: Contractor
+                  companyName:
+                    type: string
+                    nullable: true
+                    description: Contact company name
+                    example: splose
+                  providerNumber:
+                    type: string
+                    nullable: true
+                    description: Contact provider number
+                    example: "12345678"
+                  doctorType:
+                    type: string
+                    nullable: true
+                    enum: *a5
+                    description: Contact provider number
+                    example: GP
+                  associatedPatientIds:
+                    type: array
+                    nullable: true
+                    items:
+                      type: number
+                    description: The associated patients' id in this contact
+                  associatedInvoiceIds:
+                    type: array
+                    nullable: true
+                    items:
+                      type: number
+                    description: The associated invoices' id in this contact
+                  associatedCaseIds:
+                    type: array
+                    nullable: true
+                    items:
+                      type: number
+                    description: The associated invoices' id in this contact
+                  email:
+                    type: string
+                    nullable: true
+                    description: Contact email
+                    example: harry@hogwarts.edu
+                  addressL1:
+                    type: string
+                    nullable: true
+                    description: Contact address line 1
+                    example: 123 King William Street
+                  addressL2:
+                    type: string
+                    nullable: true
+                    description: Contact address line 2
+                    example: ""
+                  addressL3:
+                    type: string
+                    nullable: true
+                    description: Contact address line 3
+                    example: ""
+                  suburb:
+                    type: string
+                    nullable: true
+                    description: Contact city
+                    example: Adelaide
+                  state:
+                    type: string
+                    nullable: true
+                    description: Contact state
+                    example: SA
+                  postalCode:
+                    type: string
+                    nullable: true
+                    description: Contact post code
+                    example: "5000"
+                  country:
+                    type: string
+                    nullable: true
+                    description: Contact country
+                    example: Australia
+                  phoneNumbers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          nullable: true
+                          enum: *a1
+                          description: Phone number type
+                          example: Mobile
+                        code:
+                          type: string
+                          nullable: true
+                          description: Phone country code
+                          example: "+61"
+                        phoneNumber:
+                          type: string
+                          nullable: true
+                          description: Phone number
+                          example: "401234567"
+                      required:
+                        - type
+                        - code
+                        - phoneNumber
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - type
+                  - title
+                  - firstName
+                  - lastName
+                  - preferredName
+                  - profession
+                  - companyName
+                  - providerNumber
+                  - doctorType
+                  - associatedPatientIds
+                  - associatedInvoiceIds
+                  - associatedCaseIds
+                  - email
+                  - addressL1
+                  - addressL2
+                  - addressL3
+                  - suburb
+                  - state
+                  - postalCode
+                  - country
                   - createdAt
                   - updatedAt
   /services:
@@ -1028,7 +1523,7 @@ paths:
                           example: 1
                         for:
                           type: string
-                          enum: &a5
+                          enum: &a6
                             - appointment
                             - support activity
                           description: The service is used for
@@ -1060,7 +1555,7 @@ paths:
                         unit:
                           type: string
                           nullable: true
-                          enum: &a6
+                          enum: &a7
                             - Hour
                             - Each
                           description: Service unit
@@ -1073,7 +1568,7 @@ paths:
                         taxType:
                           anyOf:
                             - type: string
-                              enum: &a7
+                              enum: &a8
                                 - STANDARD
                                 - ZERO
                                 - EXEMPT
@@ -1117,7 +1612,7 @@ paths:
                           items:
                             type: string
                           description: Service tags
-                          example: &a8
+                          example: &a9
                             - NDIS
                         createdAt:
                           anyOf:
@@ -1204,7 +1699,7 @@ paths:
                     example: 1
                   for:
                     type: string
-                    enum: *a5
+                    enum: *a6
                     description: The service is used for
                     example: appointment
                   name:
@@ -1234,7 +1729,7 @@ paths:
                   unit:
                     type: string
                     nullable: true
-                    enum: *a6
+                    enum: *a7
                     description: Service unit
                     example: Hour
                   pricing:
@@ -1245,7 +1740,7 @@ paths:
                   taxType:
                     anyOf:
                       - type: string
-                        enum: *a7
+                        enum: *a8
                       - type: string
                       - nullable: true
                     description: Tax type, check Splose support for more info
@@ -1285,7 +1780,7 @@ paths:
                     items:
                       type: string
                     description: Service tags
-                    example: *a8
+                    example: *a9
                   createdAt:
                     anyOf:
                       - type: string
@@ -1714,7 +2209,7 @@ paths:
         - schema:
             type: string
             nullable: true
-            enum: &a9
+            enum: &a10
               - practitioner admin
               - practitioner
               - accountant
@@ -1774,7 +2269,7 @@ paths:
                           example: Practitioner admin of Hogwarts
                         roleName:
                           type: string
-                          enum: *a9
+                          enum: *a10
                           description: Practitioner role name
                           example: practitioner admin
                         onlineBooking:
@@ -1912,7 +2407,7 @@ paths:
                     example: Practitioner admin of Hogwarts
                   roleName:
                     type: string
-                    enum: *a9
+                    enum: *a10
                     description: Practitioner role name
                     example: practitioner admin
                   onlineBooking:
@@ -2058,7 +2553,7 @@ paths:
         - schema:
             type: string
             nullable: true
-            enum: &a10
+            enum: &a11
               - Arrived
               - Did not arrive
               - Cancelled
@@ -2146,7 +2641,8 @@ paths:
                           minimum: 0
                           exclusiveMinimum: true
                           default: 1
-                          description: The max patient number of this appointment. A number greater than 1
+                          description:
+                            The max patient number of this appointment. A number greater than 1
                             indicates a group appointment.
                         caseId:
                           type: integer
@@ -2175,7 +2671,7 @@ paths:
                               status:
                                 type: string
                                 nullable: true
-                                enum: *a10
+                                enum: *a11
                                 description: Patient status of this appointment
                               note:
                                 type: string
@@ -2234,7 +2730,7 @@ paths:
                         unit:
                           type: string
                           nullable: true
-                          enum: &a11
+                          enum: &a12
                             - Hour
                             - Each
                           default: Hour
@@ -2252,7 +2748,7 @@ paths:
                         taxType:
                           anyOf:
                             - type: string
-                              enum: *a7
+                              enum: *a8
                             - type: string
                             - nullable: true
                           description: Tax type, check Splose support for more info
@@ -2265,7 +2761,7 @@ paths:
                             exclusiveMinimum: true
                             example: 1
                           description: Array of support item ids of this appointment
-                          example: &a12
+                          example: &a13
                             - 1
                         note:
                           type: string
@@ -2398,7 +2894,8 @@ paths:
                     minimum: 0
                     exclusiveMinimum: true
                     default: 1
-                    description: The max patient number of this appointment. A number greater than 1
+                    description:
+                      The max patient number of this appointment. A number greater than 1
                       indicates a group appointment.
                   caseId:
                     type: integer
@@ -2427,7 +2924,7 @@ paths:
                         status:
                           type: string
                           nullable: true
-                          enum: *a10
+                          enum: *a11
                           description: Patient status of this appointment
                         note:
                           type: string
@@ -2486,7 +2983,7 @@ paths:
                   unit:
                     type: string
                     nullable: true
-                    enum: *a11
+                    enum: *a12
                     default: Hour
                     description: The appointment unit
                   pricing:
@@ -2502,7 +2999,7 @@ paths:
                   taxType:
                     anyOf:
                       - type: string
-                        enum: *a7
+                        enum: *a8
                       - type: string
                       - nullable: true
                     description: Tax type, check Splose support for more info
@@ -2515,7 +3012,7 @@ paths:
                       exclusiveMinimum: true
                       example: 1
                     description: Array of support item ids of this appointment
-                    example: *a12
+                    example: *a13
                   note:
                     type: string
                     nullable: true
@@ -2783,7 +3280,7 @@ paths:
                         taxType:
                           anyOf:
                             - type: string
-                              enum: *a7
+                              enum: *a8
                             - type: string
                             - nullable: true
                           description: Tax type, check Splose support for more info
@@ -2966,7 +3463,7 @@ paths:
                   taxType:
                     anyOf:
                       - type: string
-                        enum: *a7
+                        enum: *a8
                       - type: string
                       - nullable: true
                     description: Tax type, check Splose support for more info
@@ -3109,7 +3606,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: &a13
+                          enum: &a14
                             - Provider Travel
                             - Provider Travel - Non-Labour Costs
                             - Activity Based Transport
@@ -3235,7 +3732,7 @@ paths:
                     example: 1
                   type:
                     type: string
-                    enum: *a13
+                    enum: *a14
                     description: Support item type
                     example: Provider Travel
                   itemCode:
@@ -3384,7 +3881,7 @@ paths:
         - schema:
             type: string
             nullable: true
-            enum: &a14
+            enum: &a15
               - Draft
               - Awaiting Payment
               - Paid
@@ -3459,7 +3956,7 @@ paths:
                           example: 193.99
                         taxStatus:
                           type: string
-                          enum: &a15
+                          enum: &a16
                             - including
                             - excluding
                             - no tax
@@ -3482,7 +3979,7 @@ paths:
                           example: 193.99
                         status:
                           type: string
-                          enum: *a14
+                          enum: *a15
                           description: Invoice status
                           example: Paid
                         invoiceItems:
@@ -3498,7 +3995,7 @@ paths:
                                 example: 1
                               type:
                                 type: string
-                                enum: &a16
+                                enum: &a17
                                   - appointment
                                   - supportActivity
                                   - supportItem
@@ -3543,7 +4040,7 @@ paths:
                               taxType:
                                 anyOf:
                                   - type: string
-                                    enum: *a7
+                                    enum: *a8
                                   - type: string
                                   - nullable: true
                                 description: Tax type, check Splose support for more info
@@ -3577,7 +4074,7 @@ paths:
                           items:
                             type: string
                           description: Invoice provider numbers
-                          example: &a17
+                          example: &a18
                             - "Medicare: 12345678"
                         isArchived:
                           type: boolean
@@ -3720,7 +4217,7 @@ paths:
                     example: 193.99
                   taxStatus:
                     type: string
-                    enum: *a15
+                    enum: *a16
                     description: Invoice tax status
                     example: excluding
                   tax:
@@ -3740,7 +4237,7 @@ paths:
                     example: 193.99
                   status:
                     type: string
-                    enum: *a14
+                    enum: *a15
                     description: Invoice status
                     example: Paid
                   invoiceItems:
@@ -3756,7 +4253,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: *a16
+                          enum: *a17
                           description: Invoice item type
                           example: appointment
                         typeId:
@@ -3794,7 +4291,7 @@ paths:
                         taxType:
                           anyOf:
                             - type: string
-                              enum: *a7
+                              enum: *a8
                             - type: string
                             - nullable: true
                           description: Tax type, check Splose support for more info
@@ -3828,7 +4325,7 @@ paths:
                     items:
                       type: string
                     description: Invoice provider numbers
-                    example: *a17
+                    example: *a18
                   isArchived:
                     type: boolean
                     nullable: true
@@ -4062,7 +4559,8 @@ paths:
         - schema:
             type: integer
             nullable: true
-            description: The user group id of the practitioner associated to the waitlist
+            description:
+              The user group id of the practitioner associated to the waitlist
               item
             example: 12
           required: false
@@ -4190,7 +4688,7 @@ paths:
                           items:
                             type: number
                           description: The id list of services the waitlist item is waiting for
-                          example: &a18
+                          example: &a19
                             - 1
                             - 2
                             - 3
@@ -4199,7 +4697,7 @@ paths:
                           items:
                             type: string
                           description: Preferred days of the waitlist item
-                          example: &a19
+                          example: &a20
                             - Monday
                             - Tuesday
                         preferredTime:
@@ -4208,7 +4706,7 @@ paths:
                           items:
                             type: string
                           description: Preferred time of service for the waitlist item
-                          example: &a20
+                          example: &a21
                             - morning
                             - afternoon
                             - evening
@@ -4218,7 +4716,7 @@ paths:
                           items:
                             type: string
                           description: The waitlist tag ids of the waitlist item
-                          example: &a21
+                          example: &a22
                             - High
                             - Medium
                             - Low
@@ -4316,27 +4814,27 @@ paths:
                     items:
                       type: number
                     description: The id list of services the waitlist item is waiting for
-                    example: *a18
+                    example: *a19
                   preferredDays:
                     type: array
                     items:
                       type: string
                     description: Preferred days of the waitlist item
-                    example: *a19
+                    example: *a20
                   preferredTime:
                     type: array
                     nullable: true
                     items:
                       type: string
                     description: Preferred time of service for the waitlist item
-                    example: *a20
+                    example: *a21
                   waitlistTags:
                     type: array
                     nullable: true
                     items:
                       type: string
                     description: The waitlist tag ids of the waitlist item
-                    example: *a21
+                    example: *a22
                   createdAt:
                     anyOf:
                       - type: string
@@ -4509,7 +5007,7 @@ paths:
                           items:
                             type: string
                           description: The screener tag ids of the screener item
-                          example: &a22
+                          example: &a23
                             - High
                             - Medium
                             - Low
@@ -4597,7 +5095,7 @@ paths:
                     items:
                       type: string
                     description: The screener tag ids of the screener item
-                    example: *a22
+                    example: *a23
                   createdAt:
                     anyOf:
                       - type: string
@@ -4762,7 +5260,7 @@ paths:
                           example: 1
                         status:
                           type: string
-                          enum: &a23
+                          enum: &a24
                             - Incomplete
                             - In progress
                             - Completed
@@ -4899,7 +5397,7 @@ paths:
                     example: 1
                   status:
                     type: string
-                    enum: *a23
+                    enum: *a24
                     description: Status
                     example: Completed
                   templateId:
@@ -5101,7 +5599,7 @@ paths:
                           example: Notes
                         trackType:
                           type: string
-                          enum: &a24
+                          enum: &a25
                             - Appointments
                             - Hours
                             - Budget
@@ -5142,7 +5640,7 @@ paths:
                                 example: 1
                               type:
                                 type: string
-                                enum: &a25
+                                enum: &a26
                                   - Appointment
                                   - SupportActivity
                                   - File
@@ -5313,7 +5811,7 @@ paths:
                     example: Notes
                   trackType:
                     type: string
-                    enum: *a24
+                    enum: *a25
                     description: Track type
                     example: Budget
                   hours:
@@ -5351,7 +5849,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: *a25
+                          enum: *a26
                           description: Item type
                           example: Appointment
                       required:
@@ -5424,7 +5922,8 @@ paths:
     get:
       tags:
         - availability
-      description: Get all availabilities of a practitioner in the specified date
+      description:
+        Get all availabilities of a practitioner in the specified date
         range, max 100 days
       summary: Get all availabilities of a practitioner
       security:
@@ -5680,7 +6179,7 @@ paths:
                               - invoiceId
                               - amount
                           description: Credit allocated to invoices
-                          example: &a26 []
+                          example: &a27 []
                         xeroId:
                           type: string
                           nullable: true
@@ -5752,7 +6251,8 @@ paths:
                 amount:
                   type: number
                   nullable: true
-                  description: Total payment amount, it should be the same as the sum of all
+                  description:
+                    Total payment amount, it should be the same as the sum of all
                     paymentInvoice amount
                   example: 193.99
                 paymentDate:
@@ -5889,7 +6389,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a26
+                    example: *a27
                   xeroId:
                     type: string
                     nullable: true
@@ -6024,7 +6524,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a26
+                    example: *a27
                   xeroId:
                     type: string
                     nullable: true
