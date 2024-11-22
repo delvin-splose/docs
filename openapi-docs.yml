@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: splose public API
   description: >
-
+    
     Welcome to the splose API documentation. splose serves as a comprehensive Allied Health & NDIS practice management software designed to streamline administrative tasks and foster the growth of your practice.
 
 
@@ -2641,8 +2641,7 @@ paths:
                           minimum: 0
                           exclusiveMinimum: true
                           default: 1
-                          description:
-                            The max patient number of this appointment. A number greater than 1
+                          description: The max patient number of this appointment. A number greater than 1
                             indicates a group appointment.
                         caseId:
                           type: integer
@@ -2695,6 +2694,11 @@ paths:
                                 nullable: true
                                 description: The cancellation reason if the appointment is cancelled
                                 example: Other
+                              cancellationRate:
+                                type: number
+                                nullable: true
+                                description: The billable rate in percentage if the appointment is cancelled
+                                example: 30
                               cancellationNote:
                                 type: string
                                 nullable: true
@@ -2714,6 +2718,7 @@ paths:
                               - note
                               - invoiceId
                               - cancellationReason
+                              - cancellationRate
                               - cancellationNote
                               - statusUpdatedAt
                           description: The status of each patient of this appointment
@@ -2894,8 +2899,7 @@ paths:
                     minimum: 0
                     exclusiveMinimum: true
                     default: 1
-                    description:
-                      The max patient number of this appointment. A number greater than 1
+                    description: The max patient number of this appointment. A number greater than 1
                       indicates a group appointment.
                   caseId:
                     type: integer
@@ -2948,6 +2952,11 @@ paths:
                           nullable: true
                           description: The cancellation reason if the appointment is cancelled
                           example: Other
+                        cancellationRate:
+                          type: number
+                          nullable: true
+                          description: The billable rate in percentage if the appointment is cancelled
+                          example: 30
                         cancellationNote:
                           type: string
                           nullable: true
@@ -2967,6 +2976,7 @@ paths:
                         - note
                         - invoiceId
                         - cancellationReason
+                        - cancellationRate
                         - cancellationNote
                         - statusUpdatedAt
                     description: The status of each patient of this appointment
@@ -4559,8 +4569,7 @@ paths:
         - schema:
             type: integer
             nullable: true
-            description:
-              The user group id of the practitioner associated to the waitlist
+            description: The user group id of the practitioner associated to the waitlist
               item
             example: 12
           required: false
@@ -5922,8 +5931,7 @@ paths:
     get:
       tags:
         - availability
-      description:
-        Get all availabilities of a practitioner in the specified date
+      description: Get all availabilities of a practitioner in the specified date
         range, max 100 days
       summary: Get all availabilities of a practitioner
       security:
@@ -6251,8 +6259,7 @@ paths:
                 amount:
                   type: number
                   nullable: true
-                  description:
-                    Total payment amount, it should be the same as the sum of all
+                  description: Total payment amount, it should be the same as the sum of all
                     paymentInvoice amount
                   example: 193.99
                 paymentDate:
