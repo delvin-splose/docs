@@ -1052,6 +1052,11 @@ paths:
                           nullable: true
                           description: Contact title
                           example: Mr.
+                        name:
+                          type: string
+                          nullable: true
+                          description: Contact name
+                          example: Plan Manager
                         firstName:
                           type: string
                           nullable: true
@@ -1189,6 +1194,7 @@ paths:
                         - id
                         - type
                         - title
+                        - name
                         - firstName
                         - lastName
                         - preferredName
@@ -1263,6 +1269,11 @@ paths:
                     nullable: true
                     description: Contact title
                     example: Mr.
+                  name:
+                    type: string
+                    nullable: true
+                    description: Contact name
+                    example: Plan Manager
                   firstName:
                     type: string
                     nullable: true
@@ -1398,6 +1409,7 @@ paths:
                   - id
                   - type
                   - title
+                  - name
                   - firstName
                   - lastName
                   - preferredName
