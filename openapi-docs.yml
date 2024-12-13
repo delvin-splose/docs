@@ -3083,8 +3083,8 @@ paths:
     put:
       tags:
         - appointment
-      description: Update start and end for one appointment
-      summary: Update start and end for one appointment
+      description: Update one appointment
+      summary: Update one appointment
       security:
         - bearerAuth: []
       parameters:
@@ -3114,9 +3114,38 @@ paths:
                     - type: string
                   description: Appointment end date time (UTC)
                   example: 2024-09-22 11:45:00
-              required:
-                - start
-                - end
+                serviceId:
+                  type: integer
+                  nullable: true
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The service id of this appointment
+                  example: 1
+                locationId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The location id of this appointment
+                  example: 1
+                practitionerId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The practitioner id of this appointment
+                  example: 1
+                caseId:
+                  type: integer
+                  nullable: true
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The case id of this appointment
+                  example: 1
+                patientId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The patient id of this appointment
+                  example: 1
       responses:
         "200":
           description: Return 1 on success
@@ -6645,3 +6674,56 @@ paths:
                 type: number
                 enum:
                   - 1
+  "/patients/{id}/file":
+    post:
+      tags:
+        - patient
+      description: Upload one file for a specific patient
+      summary: Create one file for specific patient
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: Binary encoded file
+              required:
+                - file
+      responses:
+        "200":
+          description: Successfully uploaded file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Uploaded file ID
+                    example: 1
+                  name:
+                    type: string
+                    description: Uploaded file name
+                    example: patientFile.pdf
+                  patientId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient ID
+                    example: 1
+                required:
+                  - id
+                  - name
+                  - patientId
+        "400":
+          description: Missing file
+        "404":
+          description: Patient not found
+        "500":
+          description: Error storing file
