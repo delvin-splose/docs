@@ -232,12 +232,6 @@ paths:
                     items:
                       type: object
                       properties:
-                        id:
-                          type: integer
-                          minimum: 0
-                          exclusiveMinimum: true
-                          description: Patient Id
-                          example: 1
                         firstname:
                           type: string
                           description: Patient first name
@@ -294,13 +288,14 @@ paths:
                           description: The invoice receipient (contact) id of this patient
                           example: 1
                         birthdate:
-                          type: string
-                          nullable: true
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
                           description: Patient birthdate in YYYY-MM-DD format
                           example: 1996-07-30
                         timezone:
                           type: string
-                          nullable: true
                           description: Patient timezone
                           example: Australia/Adelaide
                         extraInfo:
@@ -350,6 +345,7 @@ paths:
                           example: Australia
                         phoneNumbers:
                           type: array
+                          nullable: true
                           items:
                             type: object
                             properties:
@@ -371,12 +367,9 @@ paths:
                                 example: "+61"
                               phoneNumber:
                                 type: string
-                                nullable: true
                                 description: Phone number
                                 example: "401234567"
                             required:
-                              - type
-                              - code
                               - phoneNumber
                         privacyPolicy:
                           type: string
@@ -388,30 +381,6 @@ paths:
                             - ""
                           description: Patient privacy policy status
                           example: Accepted
-                        healthFund:
-                          type: object
-                          properties:
-                            name:
-                              type: string
-                              description: Health fund name
-                              example: AHM
-                            membershipNumber:
-                              type: string
-                              nullable: true
-                              description: Health fund membership number
-                              example: "12345678"
-                            patientNumber:
-                              type: string
-                              nullable: true
-                              description: Health fund patient number
-                              example: "1"
-                            cardIssueNumber:
-                              type: string
-                              nullable: true
-                              description: Health fund card issue number
-                              example: "01"
-                          required:
-                            - name
                         ndisNumber:
                           type: string
                           nullable: true
@@ -496,18 +465,25 @@ paths:
                           nullable: true
                           description: Patient emergency contact relationship
                           example: Brother
-                        patientTags:
-                          type: array
-                          items:
-                            type: string
-                          description: Patient tags
-                          example: &a3
-                            - Self-managed
                         archived:
                           type: boolean
                           nullable: true
                           default: false
                           description: Whether the patient has been archived
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient Id
+                          example: 1
+                        patientTags:
+                          type: array
+                          nullable: true
+                          items:
+                            type: string
+                          description: Patient tags
+                          example: &a3
+                            - Self-managed
                         customFields:
                           type: array
                           nullable: true
@@ -523,6 +499,31 @@ paths:
                             required:
                               - name
                               - value
+                        healthFund:
+                          type: object
+                          nullable: true
+                          properties:
+                            name:
+                              type: string
+                              description: Health fund name
+                              example: AHM
+                            membershipNumber:
+                              type: string
+                              nullable: true
+                              description: Health fund membership number
+                              example: "12345678"
+                            patientNumber:
+                              type: string
+                              nullable: true
+                              description: Health fund patient number
+                              example: "1"
+                            cardIssueNumber:
+                              type: string
+                              nullable: true
+                              description: Health fund card issue number
+                              example: "01"
+                          required:
+                            - name
                         createdAt:
                           anyOf:
                             - type: string
@@ -536,39 +537,10 @@ paths:
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
                       required:
-                        - id
                         - firstname
                         - lastname
-                        - middleName
-                        - preferredName
-                        - title
-                        - email
-                        - sex
-                        - genderIdentity
-                        - pronouns
-                        - alert
-                        - invoiceRecipientId
-                        - birthdate
                         - timezone
-                        - extraInfo
-                        - extraBillingInfo
-                        - addressL1
-                        - addressL2
-                        - addressL3
-                        - city
-                        - state
-                        - postalCode
-                        - country
-                        - phoneNumbers
-                        - privacyPolicy
-                        - ndisNumber
-                        - medicareNum
-                        - irn
-                        - veteransFileNumber
-                        - emergencyContactNumber
-                        - emergencyContactName
-                        - emergencyContactRelationship
-                        - patientTags
+                        - id
                         - createdAt
                         - updatedAt
                   links:
@@ -585,37 +557,273 @@ paths:
                 required:
                   - data
                   - links
-  "/patients/{id}":
-    get:
+    post:
       tags:
         - patient
-      description: Get patient data by id
-      summary: Get a single patient
+      description: Create a single patient
+      summary: Create a single patient
       security:
         - bearerAuth: []
-      parameters:
-        - schema:
-            type: integer
-            minimum: 0
-            exclusiveMinimum: true
-            example: 1
-          required: true
-          name: id
-          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                  description: Patient first name
+                  example: Harry
+                lastname:
+                  type: string
+                  description: Patient last name
+                  example: Potter
+                middleName:
+                  type: string
+                  nullable: true
+                  description: Patient middle name
+                  example: James
+                preferredName:
+                  type: string
+                  nullable: true
+                  description: Patient preferred name
+                  example: Harry
+                title:
+                  type: string
+                  nullable: true
+                  description: Patient title
+                  example: Mr.
+                email:
+                  type: string
+                  nullable: true
+                  description: Patient email
+                  example: harry@hogwarts.edu
+                sex:
+                  type: string
+                  nullable: true
+                  description: Patient sex
+                  example: Male
+                genderIdentity:
+                  type: string
+                  nullable: true
+                  description: Patient gender identity
+                  example: Man
+                pronouns:
+                  type: string
+                  nullable: true
+                  description: Patient pronouns
+                  example: They/them
+                alert:
+                  type: string
+                  nullable: true
+                  description: Patient alert messages
+                  example: He knows magic
+                invoiceRecipientId:
+                  type: integer
+                  nullable: true
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The invoice receipient (contact) id of this patient
+                  example: 1
+                birthdate:
+                  anyOf:
+                    - type: string
+                    - type: string
+                    - nullable: true
+                  description: Patient birthdate in YYYY-MM-DD format
+                  example: 1996-07-30
+                timezone:
+                  type: string
+                  description: Patient timezone
+                  example: Australia/Adelaide
+                extraInfo:
+                  type: string
+                  nullable: true
+                  description: Patient extra info
+                  example: Some extra info
+                extraBillingInfo:
+                  type: string
+                  nullable: true
+                  description: Patient extra billing info
+                  example: Some extra billing info
+                addressL1:
+                  type: string
+                  nullable: true
+                  description: Patient address line 1
+                  example: 123 King William Street
+                addressL2:
+                  type: string
+                  nullable: true
+                  description: Patient address line 2
+                  example: ""
+                addressL3:
+                  type: string
+                  nullable: true
+                  description: Patient address line 3
+                  example: ""
+                city:
+                  type: string
+                  nullable: true
+                  description: Patient city
+                  example: Adelaide
+                state:
+                  type: string
+                  nullable: true
+                  description: Patient state
+                  example: SA
+                postalCode:
+                  type: string
+                  nullable: true
+                  description: Patient post code
+                  example: "5000"
+                country:
+                  type: string
+                  nullable: true
+                  description: Patient country
+                  example: Australia
+                phoneNumbers:
+                  type: array
+                  nullable: true
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        nullable: true
+                        enum: *a1
+                        description: Phone number type
+                        example: Mobile
+                      code:
+                        type: string
+                        nullable: true
+                        description: Phone country code
+                        example: "+61"
+                      phoneNumber:
+                        type: string
+                        description: Phone number
+                        example: "401234567"
+                    required:
+                      - phoneNumber
+                privacyPolicy:
+                  type: string
+                  nullable: true
+                  enum: *a2
+                  description: Patient privacy policy status
+                  example: Accepted
+                ndisNumber:
+                  type: string
+                  nullable: true
+                  description: Patient NDIS number
+                  example: "430123456"
+                ndisInfo:
+                  type: object
+                  nullable: true
+                  properties:
+                    diagnosis:
+                      type: string
+                      nullable: true
+                      description: NDIS Diagnosis
+                      example: Foot Injury
+                    nomineeEmail:
+                      type: string
+                      nullable: true
+                      description: Nominee email
+                      example: nominee@email.com
+                    fundManagement:
+                      type: string
+                      nullable: true
+                      description: NDIS fund management type
+                      example: Plan-managed
+                    nomineeLastName:
+                      type: string
+                      nullable: true
+                      description: Last name of nominee
+                      example: Clark
+                    nomineeFirstName:
+                      type: string
+                      nullable: true
+                      description: First name of nominee
+                      example: Chris
+                    nomineeMobileCode:
+                      type: string
+                      nullable: true
+                      description: Nominee phone country code
+                      example: "+61"
+                    nomineeMobileNumber:
+                      type: string
+                      nullable: true
+                      description: Nominee phone number
+                      example: "433555111"
+                    startDate:
+                      type: string
+                      nullable: true
+                      description: Plan start date
+                      example: 2024-02-09T00:00:00.000Z
+                    endDate:
+                      type: string
+                      nullable: true
+                      description: Plan end date
+                      example: 2024-02-18T00:00:00.000Z
+                medicareNum:
+                  type: string
+                  nullable: true
+                  description: Patient Medicare number
+                  example: "4444444444"
+                irn:
+                  type: string
+                  nullable: true
+                  description: Patient Medicare reference number
+                  example: "1"
+                veteransFileNumber:
+                  type: string
+                  nullable: true
+                  description: Patient veterans information
+                  example: ""
+                emergencyContactNumber:
+                  type: string
+                  nullable: true
+                  description: Patient emergency contact number
+                  example: "0412345678"
+                emergencyContactName:
+                  type: string
+                  nullable: true
+                  description: Patient emergency contact name
+                  example: Quentin Neely
+                emergencyContactRelationship:
+                  type: string
+                  nullable: true
+                  description: Patient emergency contact relationship
+                  example: Brother
+                archived:
+                  type: boolean
+                  nullable: true
+                  default: false
+                  description: Whether the patient has been archived
+                createdAt:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Object creation date time
+                  example: 2023-07-30T09:00:00Z
+                updatedAt:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Object update date time
+                  example: 2023-07-30T09:00:00Z
+              required:
+                - firstname
+                - lastname
+                - timezone
+              additionalProperties: false
       responses:
         "200":
-          description: Object with patient data.
+          description: Successfully created patient
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                    minimum: 0
-                    exclusiveMinimum: true
-                    description: Patient Id
-                    example: 1
                   firstname:
                     type: string
                     description: Patient first name
@@ -672,13 +880,14 @@ paths:
                     description: The invoice receipient (contact) id of this patient
                     example: 1
                   birthdate:
-                    type: string
-                    nullable: true
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
                     description: Patient birthdate in YYYY-MM-DD format
                     example: 1996-07-30
                   timezone:
                     type: string
-                    nullable: true
                     description: Patient timezone
                     example: Australia/Adelaide
                   extraInfo:
@@ -728,6 +937,7 @@ paths:
                     example: Australia
                   phoneNumbers:
                     type: array
+                    nullable: true
                     items:
                       type: object
                       properties:
@@ -744,12 +954,9 @@ paths:
                           example: "+61"
                         phoneNumber:
                           type: string
-                          nullable: true
                           description: Phone number
                           example: "401234567"
                       required:
-                        - type
-                        - code
                         - phoneNumber
                   privacyPolicy:
                     type: string
@@ -757,30 +964,6 @@ paths:
                     enum: *a2
                     description: Patient privacy policy status
                     example: Accepted
-                  healthFund:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Health fund name
-                        example: AHM
-                      membershipNumber:
-                        type: string
-                        nullable: true
-                        description: Health fund membership number
-                        example: "12345678"
-                      patientNumber:
-                        type: string
-                        nullable: true
-                        description: Health fund patient number
-                        example: "1"
-                      cardIssueNumber:
-                        type: string
-                        nullable: true
-                        description: Health fund card issue number
-                        example: "01"
-                    required:
-                      - name
                   ndisNumber:
                     type: string
                     nullable: true
@@ -865,17 +1048,24 @@ paths:
                     nullable: true
                     description: Patient emergency contact relationship
                     example: Brother
-                  patientTags:
-                    type: array
-                    items:
-                      type: string
-                    description: Patient tags
-                    example: *a3
                   archived:
                     type: boolean
                     nullable: true
                     default: false
                     description: Whether the patient has been archived
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient Id
+                    example: 1
+                  patientTags:
+                    type: array
+                    nullable: true
+                    items:
+                      type: string
+                    description: Patient tags
+                    example: *a3
                   customFields:
                     type: array
                     nullable: true
@@ -891,6 +1081,31 @@ paths:
                       required:
                         - name
                         - value
+                  healthFund:
+                    type: object
+                    nullable: true
+                    properties:
+                      name:
+                        type: string
+                        description: Health fund name
+                        example: AHM
+                      membershipNumber:
+                        type: string
+                        nullable: true
+                        description: Health fund membership number
+                        example: "12345678"
+                      patientNumber:
+                        type: string
+                        nullable: true
+                        description: Health fund patient number
+                        example: "1"
+                      cardIssueNumber:
+                        type: string
+                        nullable: true
+                        description: Health fund card issue number
+                        example: "01"
+                    required:
+                      - name
                   createdAt:
                     anyOf:
                       - type: string
@@ -904,39 +1119,336 @@ paths:
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
                 required:
-                  - id
                   - firstname
                   - lastname
-                  - middleName
-                  - preferredName
-                  - title
-                  - email
-                  - sex
-                  - genderIdentity
-                  - pronouns
-                  - alert
-                  - invoiceRecipientId
-                  - birthdate
                   - timezone
-                  - extraInfo
-                  - extraBillingInfo
-                  - addressL1
-                  - addressL2
-                  - addressL3
-                  - city
-                  - state
-                  - postalCode
-                  - country
-                  - phoneNumbers
-                  - privacyPolicy
-                  - ndisNumber
-                  - medicareNum
-                  - irn
-                  - veteransFileNumber
-                  - emergencyContactNumber
-                  - emergencyContactName
-                  - emergencyContactRelationship
-                  - patientTags
+                  - id
+                  - createdAt
+                  - updatedAt
+  "/patients/{id}":
+    get:
+      tags:
+        - patient
+      description: Get patient data by id
+      summary: Get a single patient
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with patient data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstname:
+                    type: string
+                    description: Patient first name
+                    example: Harry
+                  lastname:
+                    type: string
+                    description: Patient last name
+                    example: Potter
+                  middleName:
+                    type: string
+                    nullable: true
+                    description: Patient middle name
+                    example: James
+                  preferredName:
+                    type: string
+                    nullable: true
+                    description: Patient preferred name
+                    example: Harry
+                  title:
+                    type: string
+                    nullable: true
+                    description: Patient title
+                    example: Mr.
+                  email:
+                    type: string
+                    nullable: true
+                    description: Patient email
+                    example: harry@hogwarts.edu
+                  sex:
+                    type: string
+                    nullable: true
+                    description: Patient sex
+                    example: Male
+                  genderIdentity:
+                    type: string
+                    nullable: true
+                    description: Patient gender identity
+                    example: Man
+                  pronouns:
+                    type: string
+                    nullable: true
+                    description: Patient pronouns
+                    example: They/them
+                  alert:
+                    type: string
+                    nullable: true
+                    description: Patient alert messages
+                    example: He knows magic
+                  invoiceRecipientId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The invoice receipient (contact) id of this patient
+                    example: 1
+                  birthdate:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Patient birthdate in YYYY-MM-DD format
+                    example: 1996-07-30
+                  timezone:
+                    type: string
+                    description: Patient timezone
+                    example: Australia/Adelaide
+                  extraInfo:
+                    type: string
+                    nullable: true
+                    description: Patient extra info
+                    example: Some extra info
+                  extraBillingInfo:
+                    type: string
+                    nullable: true
+                    description: Patient extra billing info
+                    example: Some extra billing info
+                  addressL1:
+                    type: string
+                    nullable: true
+                    description: Patient address line 1
+                    example: 123 King William Street
+                  addressL2:
+                    type: string
+                    nullable: true
+                    description: Patient address line 2
+                    example: ""
+                  addressL3:
+                    type: string
+                    nullable: true
+                    description: Patient address line 3
+                    example: ""
+                  city:
+                    type: string
+                    nullable: true
+                    description: Patient city
+                    example: Adelaide
+                  state:
+                    type: string
+                    nullable: true
+                    description: Patient state
+                    example: SA
+                  postalCode:
+                    type: string
+                    nullable: true
+                    description: Patient post code
+                    example: "5000"
+                  country:
+                    type: string
+                    nullable: true
+                    description: Patient country
+                    example: Australia
+                  phoneNumbers:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          nullable: true
+                          enum: *a1
+                          description: Phone number type
+                          example: Mobile
+                        code:
+                          type: string
+                          nullable: true
+                          description: Phone country code
+                          example: "+61"
+                        phoneNumber:
+                          type: string
+                          description: Phone number
+                          example: "401234567"
+                      required:
+                        - phoneNumber
+                  privacyPolicy:
+                    type: string
+                    nullable: true
+                    enum: *a2
+                    description: Patient privacy policy status
+                    example: Accepted
+                  ndisNumber:
+                    type: string
+                    nullable: true
+                    description: Patient NDIS number
+                    example: "430123456"
+                  ndisInfo:
+                    type: object
+                    nullable: true
+                    properties:
+                      diagnosis:
+                        type: string
+                        nullable: true
+                        description: NDIS Diagnosis
+                        example: Foot Injury
+                      nomineeEmail:
+                        type: string
+                        nullable: true
+                        description: Nominee email
+                        example: nominee@email.com
+                      fundManagement:
+                        type: string
+                        nullable: true
+                        description: NDIS fund management type
+                        example: Plan-managed
+                      nomineeLastName:
+                        type: string
+                        nullable: true
+                        description: Last name of nominee
+                        example: Clark
+                      nomineeFirstName:
+                        type: string
+                        nullable: true
+                        description: First name of nominee
+                        example: Chris
+                      nomineeMobileCode:
+                        type: string
+                        nullable: true
+                        description: Nominee phone country code
+                        example: "+61"
+                      nomineeMobileNumber:
+                        type: string
+                        nullable: true
+                        description: Nominee phone number
+                        example: "433555111"
+                      startDate:
+                        type: string
+                        nullable: true
+                        description: Plan start date
+                        example: 2024-02-09T00:00:00.000Z
+                      endDate:
+                        type: string
+                        nullable: true
+                        description: Plan end date
+                        example: 2024-02-18T00:00:00.000Z
+                  medicareNum:
+                    type: string
+                    nullable: true
+                    description: Patient Medicare number
+                    example: "4444444444"
+                  irn:
+                    type: string
+                    nullable: true
+                    description: Patient Medicare reference number
+                    example: "1"
+                  veteransFileNumber:
+                    type: string
+                    nullable: true
+                    description: Patient veterans information
+                    example: ""
+                  emergencyContactNumber:
+                    type: string
+                    nullable: true
+                    description: Patient emergency contact number
+                    example: "0412345678"
+                  emergencyContactName:
+                    type: string
+                    nullable: true
+                    description: Patient emergency contact name
+                    example: Quentin Neely
+                  emergencyContactRelationship:
+                    type: string
+                    nullable: true
+                    description: Patient emergency contact relationship
+                    example: Brother
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the patient has been archived
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient Id
+                    example: 1
+                  patientTags:
+                    type: array
+                    nullable: true
+                    items:
+                      type: string
+                    description: Patient tags
+                    example: *a3
+                  customFields:
+                    type: array
+                    nullable: true
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          anyOf:
+                            - type: string
+                            - type: number
+                      required:
+                        - name
+                        - value
+                  healthFund:
+                    type: object
+                    nullable: true
+                    properties:
+                      name:
+                        type: string
+                        description: Health fund name
+                        example: AHM
+                      membershipNumber:
+                        type: string
+                        nullable: true
+                        description: Health fund membership number
+                        example: "12345678"
+                      patientNumber:
+                        type: string
+                        nullable: true
+                        description: Health fund patient number
+                        example: "1"
+                      cardIssueNumber:
+                        type: string
+                        nullable: true
+                        description: Health fund card issue number
+                        example: "01"
+                    required:
+                      - name
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - firstname
+                  - lastname
+                  - timezone
+                  - id
                   - createdAt
                   - updatedAt
   /contacts:
@@ -1171,12 +1683,9 @@ paths:
                                 example: "+61"
                               phoneNumber:
                                 type: string
-                                nullable: true
                                 description: Phone number
                                 example: "401234567"
                             required:
-                              - type
-                              - code
                               - phoneNumber
                         createdAt:
                           anyOf:
@@ -1386,12 +1895,9 @@ paths:
                           example: "+61"
                         phoneNumber:
                           type: string
-                          nullable: true
                           description: Phone number
                           example: "401234567"
                       required:
-                        - type
-                        - code
                         - phoneNumber
                   createdAt:
                     anyOf:
@@ -2569,6 +3075,7 @@ paths:
               - Arrived
               - Did not arrive
               - Cancelled
+              - Completed
             description: Patient status of this appointment
           required: false
           name: status
@@ -2622,7 +3129,7 @@ paths:
                           anyOf:
                             - type: string
                             - type: string
-                          description: Appointment start date time
+                          description: Appointment end date time
                           example: 2023-07-30T09:00:00Z
                         isUnavailableBlock:
                           type: boolean
@@ -2839,6 +3346,316 @@ paths:
                 required:
                   - data
                   - links
+    post:
+      tags:
+        - appointment
+      description: Create a single appointment
+      summary: Create a single appointment
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Appointment start date time
+                  example: 2023-07-30T09:00:00Z
+                end:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Appointment end date time
+                  example: 2023-07-30T09:00:00Z
+                serviceId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The service id of this appointment
+                  example: 1
+                locationId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The location id of this appointment
+                  example: 1
+                practitionerId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The practitioner id of this appointment
+                  example: 1
+                caseId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The case id of this appointment
+                  example: 1
+                patientId:
+                  type: integer
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: The patient id of this appointment
+                  example: 1
+                note:
+                  type: string
+                  description: The appointment note
+                  example: Some notes
+                createdAt:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Object creation date time
+                  example: 2023-07-30T09:00:00Z
+                updatedAt:
+                  anyOf:
+                    - type: string
+                    - type: string
+                  description: Object update date time
+                  example: 2023-07-30T09:00:00Z
+                deletedAt:
+                  anyOf:
+                    - type: string
+                    - type: string
+                    - nullable: true
+                  description: Object archived date time
+                  example: 2023-07-30T09:00:00Z
+              required:
+                - start
+                - end
+                - serviceId
+                - locationId
+                - practitionerId
+                - patientId
+              additionalProperties: false
+      responses:
+        "200":
+          description: Successfully created appointment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Appointment id
+                    example: 1
+                  start:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Appointment start date time
+                    example: 2023-07-30T09:00:00Z
+                  end:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Appointment end date time
+                    example: 2023-07-30T09:00:00Z
+                  isUnavailableBlock:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                  serviceId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The service id of this appointment
+                    example: 1
+                  locationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The location id of this appointment
+                    example: 1
+                  practitionerId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The practitioner id of this appointment
+                    example: 1
+                  maxPatients:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    default: 1
+                    description: The max patient number of this appointment. A number greater than 1
+                      indicates a group appointment.
+                  caseId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The case id of this appointment
+                    example: 1
+                  appointmentPatients:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        appointmentId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Appointment id
+                          example: 1
+                        patientId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient id
+                          example: 1
+                        status:
+                          type: string
+                          nullable: true
+                          enum: *a11
+                          description: Patient status of this appointment
+                        note:
+                          type: string
+                          nullable: true
+                          description: Note for the appointment patient
+                          example: Some notes
+                        doNotInvoice:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether this appointment patient will not be invoiced
+                        invoiceId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id of this appointment patient
+                          example: 1
+                        cancellationReason:
+                          type: string
+                          nullable: true
+                          description: The cancellation reason if the appointment is cancelled
+                          example: Other
+                        cancellationRate:
+                          type: number
+                          nullable: true
+                          description: The billable rate in percentage if the appointment is cancelled
+                          example: 30
+                        cancellationNote:
+                          type: string
+                          nullable: true
+                          description: The cancellation note if the appointment is cancelled
+                          example: Some notes
+                        statusUpdatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          description: The status update time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - appointmentId
+                        - patientId
+                        - status
+                        - note
+                        - invoiceId
+                        - cancellationReason
+                        - cancellationRate
+                        - cancellationNote
+                        - statusUpdatedAt
+                    description: The status of each patient of this appointment
+                  repeatId:
+                    type: string
+                    nullable: true
+                    description: An recurring appointment will have this repeat id
+                    example: 12345678-abcd-4321-dcba-12a34b56c78d
+                  recurringRule:
+                    type: string
+                    nullable: true
+                    description: The rule for recurring appointment
+                    example: DTSTART:2023080T010000ZRRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=6
+                  unit:
+                    type: string
+                    nullable: true
+                    enum: *a12
+                    default: Hour
+                    description: The appointment unit
+                  pricing:
+                    type: number
+                    nullable: true
+                    description: The appointment unit price, in dollar
+                    example: 193.99
+                  total:
+                    type: number
+                    nullable: true
+                    description: The appointment total price without tax, in dollar
+                    example: 193.99
+                  taxType:
+                    anyOf:
+                      - type: string
+                        enum: *a8
+                      - type: string
+                      - nullable: true
+                    description: Tax type, check Splose support for more info
+                    example: STANDARD
+                  supportItemIds:
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      exclusiveMinimum: true
+                      example: 1
+                    description: Array of support item ids of this appointment
+                    example: *a13
+                  note:
+                    type: string
+                    nullable: true
+                    description: The appointment note
+                    example: Some notes
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - start
+                  - end
+                  - serviceId
+                  - locationId
+                  - practitionerId
+                  - maxPatients
+                  - caseId
+                  - appointmentPatients
+                  - repeatId
+                  - recurringRule
+                  - unit
+                  - pricing
+                  - total
+                  - taxType
+                  - supportItemIds
+                  - note
+                  - createdAt
+                  - updatedAt
+                  - deletedAt
   "/appointments/{id}":
     get:
       tags:
@@ -2880,7 +3697,7 @@ paths:
                     anyOf:
                       - type: string
                       - type: string
-                    description: Appointment start date time
+                    description: Appointment end date time
                     example: 2023-07-30T09:00:00Z
                   isUnavailableBlock:
                     type: boolean
