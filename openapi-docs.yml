@@ -1557,18 +1557,19 @@ paths:
                           example: 1
                         type:
                           type: string
+                          nullable: true
                           description: Contact type
                           example: Standard
-                        title:
-                          type: string
-                          nullable: true
-                          description: Contact title
-                          example: Mr.
                         name:
                           type: string
                           nullable: true
                           description: Contact name
                           example: Plan Manager
+                        title:
+                          type: string
+                          nullable: true
+                          description: Contact title
+                          example: Mr.
                         firstName:
                           type: string
                           nullable: true
@@ -1605,7 +1606,7 @@ paths:
                           enum: &a5
                             - GP
                             - Specialist
-                          description: Contact provider number
+                          description: Contact doctor type
                           example: GP
                         associatedPatientIds:
                           type: array
@@ -1702,8 +1703,8 @@ paths:
                       required:
                         - id
                         - type
-                        - title
                         - name
+                        - title
                         - firstName
                         - lastName
                         - preferredName
@@ -1738,26 +1739,141 @@ paths:
                 required:
                   - data
                   - links
-  "/contacts/{id}":
-    get:
+    post:
       tags:
         - contact
-      description: Get contact data by id
-      summary: Get a single contact
+      description: Create one contact
+      summary: Create one contact
       security:
         - bearerAuth: []
-      parameters:
-        - schema:
-            type: integer
-            minimum: 0
-            exclusiveMinimum: true
-            example: 1
-          required: true
-          name: id
-          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: Contact type
+                  example: Standard
+                name:
+                  type: string
+                  description: Contact name
+                  example: Plan Manager
+                title:
+                  type: string
+                  nullable: true
+                  description: Contact title
+                  example: Mr.
+                firstName:
+                  type: string
+                  nullable: true
+                  description: Contact first name
+                  example: Harry
+                lastName:
+                  type: string
+                  nullable: true
+                  description: Contact last name
+                  example: Potter
+                preferredName:
+                  type: string
+                  nullable: true
+                  description: Contact preferred name
+                  example: Harry
+                profession:
+                  type: string
+                  nullable: true
+                  description: Contact profession
+                  example: Contractor
+                companyName:
+                  type: string
+                  nullable: true
+                  description: Contact company name
+                  example: splose
+                providerNumber:
+                  type: string
+                  nullable: true
+                  description: Contact provider number
+                  example: "12345678"
+                doctorType:
+                  type: string
+                  nullable: true
+                  enum:
+                    - GP
+                    - Specialist
+                  description: Contact doctor type
+                  example: GP
+                email:
+                  type: string
+                  format: email
+                  description: Contact email
+                  example: harry@hogwarts.edu
+                addressL1:
+                  type: string
+                  nullable: true
+                  description: Contact address line 1
+                  example: 123 King William Street
+                addressL2:
+                  type: string
+                  nullable: true
+                  description: Contact address line 2
+                  example: ""
+                addressL3:
+                  type: string
+                  nullable: true
+                  description: Contact address line 3
+                  example: ""
+                suburb:
+                  type: string
+                  nullable: true
+                  description: Contact city
+                  example: Adelaide
+                state:
+                  type: string
+                  nullable: true
+                  description: Contact state
+                  example: SA
+                postalCode:
+                  type: string
+                  nullable: true
+                  description: Contact post code
+                  example: "5000"
+                country:
+                  type: string
+                  nullable: true
+                  default: Australia
+                  description: Contact country
+                  example: Australia
+                phoneNumbers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        nullable: true
+                        enum: *a1
+                        description: Phone number type
+                        example: Mobile
+                      code:
+                        type: string
+                        nullable: true
+                        description: Phone country code
+                        example: "+61"
+                      phoneNumber:
+                        type: string
+                        description: Phone number
+                        example: "401234567"
+                    required:
+                      - phoneNumber
+              required:
+                - type
+                - name
+                - email
+              additionalProperties: false
       responses:
         "200":
-          description: Object with contact data.
+          description: Successfully created contact
           content:
             application/json:
               schema:
@@ -1771,18 +1887,19 @@ paths:
                     example: 1
                   type:
                     type: string
+                    nullable: true
                     description: Contact type
                     example: Standard
-                  title:
-                    type: string
-                    nullable: true
-                    description: Contact title
-                    example: Mr.
                   name:
                     type: string
                     nullable: true
                     description: Contact name
                     example: Plan Manager
+                  title:
+                    type: string
+                    nullable: true
+                    description: Contact title
+                    example: Mr.
                   firstName:
                     type: string
                     nullable: true
@@ -1817,7 +1934,7 @@ paths:
                     type: string
                     nullable: true
                     enum: *a5
-                    description: Contact provider number
+                    description: Contact doctor type
                     example: GP
                   associatedPatientIds:
                     type: array
@@ -1914,8 +2031,209 @@ paths:
                 required:
                   - id
                   - type
-                  - title
                   - name
+                  - title
+                  - firstName
+                  - lastName
+                  - preferredName
+                  - profession
+                  - companyName
+                  - providerNumber
+                  - doctorType
+                  - associatedPatientIds
+                  - associatedInvoiceIds
+                  - associatedCaseIds
+                  - email
+                  - addressL1
+                  - addressL2
+                  - addressL3
+                  - suburb
+                  - state
+                  - postalCode
+                  - country
+                  - createdAt
+                  - updatedAt
+        "500":
+          description: Error creating contact
+  "/contacts/{id}":
+    get:
+      tags:
+        - contact
+      description: Get contact data by id
+      summary: Get a single contact
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with contact data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Contact id
+                    example: 1
+                  type:
+                    type: string
+                    nullable: true
+                    description: Contact type
+                    example: Standard
+                  name:
+                    type: string
+                    nullable: true
+                    description: Contact name
+                    example: Plan Manager
+                  title:
+                    type: string
+                    nullable: true
+                    description: Contact title
+                    example: Mr.
+                  firstName:
+                    type: string
+                    nullable: true
+                    description: Contact first name
+                    example: Harry
+                  lastName:
+                    type: string
+                    nullable: true
+                    description: Contact last name
+                    example: Potter
+                  preferredName:
+                    type: string
+                    nullable: true
+                    description: Contact preferred name
+                    example: Harry
+                  profession:
+                    type: string
+                    nullable: true
+                    description: Contact profession
+                    example: Contractor
+                  companyName:
+                    type: string
+                    nullable: true
+                    description: Contact company name
+                    example: splose
+                  providerNumber:
+                    type: string
+                    nullable: true
+                    description: Contact provider number
+                    example: "12345678"
+                  doctorType:
+                    type: string
+                    nullable: true
+                    enum: *a5
+                    description: Contact doctor type
+                    example: GP
+                  associatedPatientIds:
+                    type: array
+                    nullable: true
+                    items:
+                      type: number
+                    description: The associated patients' id in this contact
+                  associatedInvoiceIds:
+                    type: array
+                    nullable: true
+                    items:
+                      type: number
+                    description: The associated invoices' id in this contact
+                  associatedCaseIds:
+                    type: array
+                    nullable: true
+                    items:
+                      type: number
+                    description: The associated invoices' id in this contact
+                  email:
+                    type: string
+                    nullable: true
+                    description: Contact email
+                    example: harry@hogwarts.edu
+                  addressL1:
+                    type: string
+                    nullable: true
+                    description: Contact address line 1
+                    example: 123 King William Street
+                  addressL2:
+                    type: string
+                    nullable: true
+                    description: Contact address line 2
+                    example: ""
+                  addressL3:
+                    type: string
+                    nullable: true
+                    description: Contact address line 3
+                    example: ""
+                  suburb:
+                    type: string
+                    nullable: true
+                    description: Contact city
+                    example: Adelaide
+                  state:
+                    type: string
+                    nullable: true
+                    description: Contact state
+                    example: SA
+                  postalCode:
+                    type: string
+                    nullable: true
+                    description: Contact post code
+                    example: "5000"
+                  country:
+                    type: string
+                    nullable: true
+                    description: Contact country
+                    example: Australia
+                  phoneNumbers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          nullable: true
+                          enum: *a1
+                          description: Phone number type
+                          example: Mobile
+                        code:
+                          type: string
+                          nullable: true
+                          description: Phone country code
+                          example: "+61"
+                        phoneNumber:
+                          type: string
+                          description: Phone number
+                          example: "401234567"
+                      required:
+                        - phoneNumber
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - type
+                  - name
+                  - title
                   - firstName
                   - lastName
                   - preferredName
@@ -2765,6 +3083,11 @@ paths:
                           type: string
                           description: Practitioner last name
                           example: Dumbledore
+                        email:
+                          type: string
+                          nullable: true
+                          format: email
+                          description: Practitioner email
                         title:
                           type: string
                           nullable: true
@@ -2842,6 +3165,7 @@ paths:
                         - id
                         - firstname
                         - lastname
+                        - email
                         - title
                         - profession
                         - description
@@ -2903,6 +3227,11 @@ paths:
                     type: string
                     description: Practitioner last name
                     example: Dumbledore
+                  email:
+                    type: string
+                    nullable: true
+                    format: email
+                    description: Practitioner email
                   title:
                     type: string
                     nullable: true
@@ -2980,6 +3309,7 @@ paths:
                   - id
                   - firstname
                   - lastname
+                  - email
                   - title
                   - profession
                   - description
