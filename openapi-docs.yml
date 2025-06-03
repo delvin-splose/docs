@@ -537,10 +537,18 @@ paths:
                             - type: string
                           description: Object update date time
                           example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
                       required:
                         - firstname
                         - lastname
                         - id
+                        - deletedAt
                   links:
                     type: object
                     properties:
@@ -1117,10 +1125,18 @@ paths:
                       - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
                 required:
                   - firstname
                   - lastname
                   - id
+                  - deletedAt
   "/patients/{id}":
     get:
       tags:
@@ -1441,15 +1457,23 @@ paths:
                       - type: string
                     description: Object update date time
                     example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
                 required:
                   - firstname
                   - lastname
                   - id
+                  - deletedAt
     put:
       tags:
         - patient
-      description: Update one patient
-      summary: Update one patient
+      description: Update single patient
+      summary: Update single patient
       security:
         - bearerAuth: []
       parameters:
@@ -1949,6 +1973,11 @@ paths:
                                 example: "401234567"
                             required:
                               - phoneNumber
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the contact has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -2001,8 +2030,8 @@ paths:
     post:
       tags:
         - contact
-      description: Create one contact
-      summary: Create one contact
+      description: Create single contact
+      summary: Create single contact
       security:
         - bearerAuth: []
       requestBody:
@@ -2275,6 +2304,11 @@ paths:
                           example: "401234567"
                       required:
                         - phoneNumber
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the contact has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -2474,6 +2508,11 @@ paths:
                           example: "401234567"
                       required:
                         - phoneNumber
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the contact has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -2705,6 +2744,11 @@ paths:
                           description: Service tags
                           example: &a9
                             - NDIS
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the service has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -2870,6 +2914,11 @@ paths:
                       type: string
                     description: Service tags
                     example: *a9
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the service has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -3039,6 +3088,11 @@ paths:
                           nullable: true
                           description: Location timezone
                           example: Australia/Adelaide
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the location has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -3170,6 +3224,11 @@ paths:
                     nullable: true
                     description: Location timezone
                     example: Australia/Adelaide
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the location has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -3389,6 +3448,11 @@ paths:
                               - type
                               - number
                               - locationId
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the practitioner has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -3536,6 +3600,11 @@ paths:
                         - type
                         - number
                         - locationId
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the practitioner has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -3871,6 +3940,11 @@ paths:
                           nullable: true
                           description: The appointment note
                           example: Some notes
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the appointment has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -4193,6 +4267,11 @@ paths:
                     nullable: true
                     description: The appointment note
                     example: Some notes
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the appointment has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -4432,6 +4511,11 @@ paths:
                     nullable: true
                     description: The appointment note
                     example: Some notes
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the appointment has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -4472,8 +4556,8 @@ paths:
     put:
       tags:
         - appointment
-      description: Update one appointment
-      summary: Update one appointment
+      description: Update single appointment
+      summary: Update single appointment
       security:
         - bearerAuth: []
       parameters:
@@ -4737,6 +4821,11 @@ paths:
                           exclusiveMinimum: true
                           description: Invoice id of this support activity patient
                           example: 1
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the support activity has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -4918,6 +5007,11 @@ paths:
                     exclusiveMinimum: true
                     description: Invoice id of this support activity patient
                     example: 1
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the support activity has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -6163,6 +6257,11 @@ paths:
                             - High
                             - Medium
                             - Low
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the waitlist has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -6275,6 +6374,11 @@ paths:
                       type: string
                     description: The waitlist tag ids of the waitlist item
                     example: *a21
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the waitlist has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -6448,6 +6552,11 @@ paths:
                             - High
                             - Medium
                             - Low
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the screener has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -6531,6 +6640,11 @@ paths:
                       type: string
                     description: The screener tag ids of the screener item
                     example: *a22
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the screener has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -6706,6 +6820,11 @@ paths:
                           exclusiveMinimum: true
                           description: Template id
                           example: 1
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the patient form has been archived
                         createdAt:
                           anyOf:
                             - type: string
@@ -6838,6 +6957,11 @@ paths:
                     exclusiveMinimum: true
                     description: Template id
                     example: 1
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the patient form has been archived
                   createdAt:
                     anyOf:
                       - type: string
@@ -7615,6 +7739,11 @@ paths:
                             - type: string
                             - nullable: true
                           description: Payment archive date time
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the payment has been archived
                       required:
                         - id
                         - paymentNumber
@@ -7644,8 +7773,8 @@ paths:
     post:
       tags:
         - payment
-      description: Create one payment for specific invoice
-      summary: Create one payment for specific invoice
+      description: Create single payment for specific invoice
+      summary: Create single payment for specific invoice
       security:
         - bearerAuth: []
       requestBody:
@@ -7824,6 +7953,11 @@ paths:
                       - type: string
                       - nullable: true
                     description: Payment archive date time
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the payment has been archived
                 required:
                   - id
                   - paymentNumber
@@ -7959,6 +8093,11 @@ paths:
                       - type: string
                       - nullable: true
                     description: Payment archive date time
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the payment has been archived
                 required:
                   - id
                   - paymentNumber
@@ -7975,8 +8114,8 @@ paths:
     delete:
       tags:
         - payment
-      description: Delete one payment by ID
-      summary: Delete one payment by ID
+      description: Delete single payment by ID
+      summary: Delete single payment by ID
       security:
         - bearerAuth: []
       parameters:
@@ -8001,8 +8140,8 @@ paths:
     put:
       tags:
         - support-item
-      description: Update one support-item
-      summary: Update one support-item
+      description: Update single support-item
+      summary: Update single support-item
       security:
         - bearerAuth: []
       parameters:
@@ -8053,8 +8192,8 @@ paths:
     post:
       tags:
         - patient
-      description: Upload one file for a specific patient
-      summary: Create one file for specific patient
+      description: Upload single file for a specific patient
+      summary: Create single file for specific patient
       security:
         - bearerAuth: []
       requestBody:
@@ -8106,8 +8245,8 @@ paths:
     put:
       tags:
         - patient
-      description: Update one patient custom field
-      summary: Update one patient custom field
+      description: Update single patient custom field
+      summary: Update single patient custom field
       security:
         - bearerAuth: []
       requestBody:
