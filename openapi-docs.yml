@@ -7467,6 +7467,431 @@ paths:
                   - items
                   - organisationId
                   - patientId
+  /credit-notes:
+    get:
+      tags:
+        - credit-note
+      description: Get a paged array of credit-notes
+      summary: Get a paged array of credit-notes
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a4
+            default: "false"
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for credit notes of this patient
+            example: 1
+          required: false
+          name: patientId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for credit notes of this invoice
+            example: 1
+          required: false
+          name: invoiceId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for credit notes created by this practitioner
+            example: 1
+          required: false
+          name: practitionerId
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: &a26
+              - Sent
+              - Viewed
+            description: Search for credit notes of this sent status
+            example: Sent
+          required: false
+          name: sentStatus
+          in: query
+      responses:
+        "200":
+          description: A paged array of credit-notes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Credit note id
+                          example: 1
+                        customNum:
+                          type: string
+                          description: Credit note custom number
+                          example: CN-0001
+                        invoiceId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Invoice id
+                          example: 1
+                        patientId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Patient id
+                          example: 1
+                        subtotal:
+                          type: number
+                          nullable: true
+                          description: Credit note subtotal amount
+                          example: 193.99
+                        tax:
+                          type: number
+                          nullable: true
+                          description: Credit note tax amount
+                          example: 0
+                        total:
+                          type: number
+                          nullable: true
+                          description: Credit note total amount
+                          example: 193.99
+                        sentStatus:
+                          type: string
+                          nullable: true
+                          enum: *a26
+                          description: Credit note status
+                          example: Sent
+                        creditNoteItems:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Credit note item id
+                                example: 1
+                              invoiceItemId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Credit note item's invoice item id
+                                example: 1
+                              unitPrice:
+                                type: number
+                                nullable: true
+                                description: Credit note item unit price, in dollar
+                                example: 193.99
+                              quantity:
+                                type: number
+                                nullable: true
+                                description: Credit note item quantity
+                                example: 0.5
+                              discount:
+                                type: string
+                                nullable: true
+                                description: Credit note item discount, in dollar or percentage
+                                example: $20.00
+                            required:
+                              - id
+                              - invoiceItemId
+                              - unitPrice
+                              - quantity
+                              - discount
+                        creditAllocations:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              invoiceId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Allocated credit to invoice id
+                                example: 1
+                              paymentId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Allocated credit to payment id
+                                example: 1
+                              amount:
+                                type: number
+                                nullable: true
+                                description: Allocated credit amount
+                                example: 193.99
+                            required:
+                              - invoiceId
+                              - paymentId
+                              - amount
+                          default: &a27 []
+                        description:
+                          type: string
+                          nullable: true
+                          description: Credit note description
+                          example: Some description
+                        createdAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - customNum
+                        - invoiceId
+                        - patientId
+                        - subtotal
+                        - tax
+                        - total
+                        - creditNoteItems
+                        - description
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  "/credit-notes/{id}":
+    get:
+      tags:
+        - credit-note
+      description: Get credit-note data by id
+      summary: Get a single credit-note
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with credit-note data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Credit note id
+                    example: 1
+                  customNum:
+                    type: string
+                    description: Credit note custom number
+                    example: CN-0001
+                  invoiceId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Invoice id
+                    example: 1
+                  patientId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Patient id
+                    example: 1
+                  subtotal:
+                    type: number
+                    nullable: true
+                    description: Credit note subtotal amount
+                    example: 193.99
+                  tax:
+                    type: number
+                    nullable: true
+                    description: Credit note tax amount
+                    example: 0
+                  total:
+                    type: number
+                    nullable: true
+                    description: Credit note total amount
+                    example: 193.99
+                  sentStatus:
+                    type: string
+                    nullable: true
+                    enum: *a26
+                    description: Credit note status
+                    example: Sent
+                  creditNoteItems:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Credit note item id
+                          example: 1
+                        invoiceItemId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Credit note item's invoice item id
+                          example: 1
+                        unitPrice:
+                          type: number
+                          nullable: true
+                          description: Credit note item unit price, in dollar
+                          example: 193.99
+                        quantity:
+                          type: number
+                          nullable: true
+                          description: Credit note item quantity
+                          example: 0.5
+                        discount:
+                          type: string
+                          nullable: true
+                          description: Credit note item discount, in dollar or percentage
+                          example: $20.00
+                      required:
+                        - id
+                        - invoiceItemId
+                        - unitPrice
+                        - quantity
+                        - discount
+                  creditAllocations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        invoiceId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Allocated credit to invoice id
+                          example: 1
+                        paymentId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Allocated credit to payment id
+                          example: 1
+                        amount:
+                          type: number
+                          nullable: true
+                          description: Allocated credit amount
+                          example: 193.99
+                      required:
+                        - invoiceId
+                        - paymentId
+                        - amount
+                    default: *a27
+                  description:
+                    type: string
+                    nullable: true
+                    description: Credit note description
+                    example: Some description
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - customNum
+                  - invoiceId
+                  - patientId
+                  - subtotal
+                  - tax
+                  - total
+                  - creditNoteItems
+                  - description
+                  - deletedAt
   "/availabilities/{practitionerId}":
     get:
       tags:
@@ -7727,7 +8152,7 @@ paths:
                               - invoiceId
                               - amount
                           description: Credit allocated to invoices
-                          example: &a26 []
+                          example: &a28 []
                         xeroId:
                           type: string
                           nullable: true
@@ -7941,7 +8366,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a26
+                    example: *a28
                   xeroId:
                     type: string
                     nullable: true
@@ -8081,7 +8506,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a26
+                    example: *a28
                   xeroId:
                     type: string
                     nullable: true
