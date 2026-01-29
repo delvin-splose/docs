@@ -3,35 +3,47 @@ info:
   version: 1.0.0
   title: splose public API
   description: >
-
-    Welcome to the splose API documentation. splose serves as a comprehensive Allied Health & NDIS practice management software designed to streamline administrative tasks and foster the growth of your practice.
+    
+    Welcome to the splose API documentation. splose serves as a comprehensive
+    Allied Health & NDIS practice management software designed to streamline
+    administrative tasks and foster the growth of your practice.
 
 
     # Introduction
 
-    The splose API follows a REST architectural style, offering JSON-encoded responses, standard HTTP response codes, easily understandable resource-oriented URLs, and robust authentication mechanisms.
+    The splose API follows a REST architectural style, offering JSON-encoded
+    responses, standard HTTP response codes, easily understandable
+    resource-oriented URLs, and robust authentication mechanisms.
 
 
     # Authentication
 
     ### API Key Authentication
 
-    The splose API employs API keys for request authentication. Workspace owners can apply for and manage API keys through the splose dashboard. It's crucial to safeguard the API key, as it grants the same permissions as the associated user.
+    The splose API employs API keys for request authentication. Workspace owners
+    can apply for and manage API keys through the splose dashboard. It's crucial
+    to safeguard the API key, as it grants the same permissions as the
+    associated user.
 
 
     ### Bearer Authentication
 
-    Authentication for API access is achieved via Bearer Authentication. Include the API key in the request header using the format: `Authorization: Bearer your_api_key`.
+    Authentication for API access is achieved via Bearer Authentication. Include
+    the API key in the request header using the format: `Authorization: Bearer
+    your_api_key`.
 
 
     ### Secure Communication
 
-    All API requests must be conducted over HTTPS. Requests made over plain HTTP will not succeed. Additionally, unauthenticated API requests will result in failure.
+    All API requests must be conducted over HTTPS. Requests made over plain HTTP
+    will not succeed. Additionally, unauthenticated API requests will result in
+    failure.
 
 
     # Rate limit
 
-    There are limits to the number of API calls that your application can make with one API key.
+    There are limits to the number of API calls that your application can make
+    with one API key.
 
 
     + Minute Limit: 60 calls per minute
@@ -39,14 +51,18 @@ info:
 
     # Error
 
-    splose uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the 2xx range indicate success. 
+    splose uses conventional HTTP response codes to indicate the success or
+    failure of an API request. In general: Codes in the 2xx range indicate
+    success. 
 
-    Codes in the 4xx range indicate an error that failed given the information provided. Codes in the 5xx range indicate an error with splose's servers.
+    Codes in the 4xx range indicate an error that failed given the information
+    provided. Codes in the 5xx range indicate an error with splose's servers.
 
 
     Error types:
 
-    + 400 - Bad request: the request failed due to missing or invalid parameters.
+    + 400 - Bad request: the request failed due to missing or invalid
+    parameters.
 
     + 401 - Unauthorized: No valid API key provided.
 
@@ -59,7 +75,9 @@ info:
 
     # Datetime
 
-    All datetime values provided in request parameters and responses are in Coordinated Universal Time (UTC). The accepted datetime formats are outlined below:
+    All datetime values provided in request parameters and responses are in
+    Coordinated Universal Time (UTC). The accepted datetime formats are outlined
+    below:
 
     + 2023-07-01
 
@@ -73,23 +91,35 @@ info:
 
     ### Pagination for Multiple Objects
 
-    For endpoints returning multiple objects, pagination is in place to manage response sizes. Each response is limited to a certain number of objects. 
+    For endpoints returning multiple objects, pagination is in place to manage
+    response sizes. Each response is limited to a certain number of objects. 
 
-    Additionally, the response includes a `links` field that provides URLs for fetching the next and/or previous pages, if applicable.
+    Additionally, the response includes a `links` field that provides URLs for
+    fetching the next and/or previous pages, if applicable.
 
 
     ### Manual Positioning
 
-    You have the option to manually specify the `id_gt` or `id_lt` value as a request parameter. This allows you to retrieve objects starting from a specific position. If neither of these values is provided, the initial page of objects will be returned by default.
+    You have the option to manually specify the `id_gt` or `id_lt` value as a
+    request parameter. This allows you to retrieve objects starting from a
+    specific position. If neither of these values is provided, the initial page
+    of objects will be returned by default.
 
-    + `id_gt`: Request for next page of objects with id greater than the specified value. 
+    + `id_gt`: Request for next page of objects with id greater than the
+    specified value. 
 
-    + `id_lt`: Request for previous page of objects with id less than the specified value. 
+    + `id_lt`: Request for previous page of objects with id less than the
+    specified value. 
 
 
     # Realtime feed
 
-    Certain users may require real-time data retrieval. Given the substantial data volume, retrieving the complete dataset may not be efficient. To address this, we offer the option to retrieve data based on its update timestamp. This approach necessitates fetching the entire dataset only during the initial request. Subsequent retrievals involve fetching solely the modified data to replace outdated information.
+    Certain users may require real-time data retrieval. Given the substantial
+    data volume, retrieving the complete dataset may not be efficient. To
+    address this, we offer the option to retrieve data based on its update
+    timestamp. This approach necessitates fetching the entire dataset only
+    during the initial request. Subsequent retrievals involve fetching solely
+    the modified data to replace outdated information.
 
     + `update_gt`: Request for objects updated after the specified datetime. 
 
@@ -473,8 +503,7 @@ paths:
                             - SMS
                             - SMS_EMAIL
                             - EMAIL
-                          description:
-                            Patient communication preference (defaults to organisation's
+                          description: Patient communication preference (defaults to organisation's
                             communication preference if not set)
                           example: SMS
                         archived:
@@ -553,6 +582,7 @@ paths:
                             - type: string
                             - type: string
                             - nullable: true
+                          default: null
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -815,8 +845,7 @@ paths:
                 communicationPreference:
                   type: string
                   enum: *a3
-                  description:
-                    Patient communication preference (defaults to organisation's
+                  description: Patient communication preference (defaults to organisation's
                     communication preference if not set)
                   example: SMS
                 archived:
@@ -1076,8 +1105,7 @@ paths:
                   communicationPreference:
                     type: string
                     enum: *a3
-                    description:
-                      Patient communication preference (defaults to organisation's
+                    description: Patient communication preference (defaults to organisation's
                       communication preference if not set)
                     example: SMS
                   archived:
@@ -1155,6 +1183,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -1162,7 +1191,7 @@ paths:
                   - lastname
                   - id
                   - deletedAt
-  "/patients/{id}":
+  /patients/{id}:
     get:
       tags:
         - patient
@@ -1415,8 +1444,7 @@ paths:
                   communicationPreference:
                     type: string
                     enum: *a3
-                    description:
-                      Patient communication preference (defaults to organisation's
+                    description: Patient communication preference (defaults to organisation's
                       communication preference if not set)
                     example: SMS
                   archived:
@@ -1494,6 +1522,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -1557,6 +1586,7 @@ paths:
                 birthdate:
                   type: string
                   nullable: true
+                  format: date
                   description: Patient birthdate in YYYY-MM-DD format
                   example: 1996-07-30
                 timezone:
@@ -2361,7 +2391,7 @@ paths:
                   - country
         "500":
           description: Error creating contact
-  "/contacts/{id}":
+  /contacts/{id}:
     get:
       tags:
         - contact
@@ -2780,6 +2810,7 @@ paths:
                             - type: string
                             - type: string
                             - nullable: true
+                          default: null
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -2813,7 +2844,7 @@ paths:
                 required:
                   - data
                   - links
-  "/services/{id}":
+  /services/{id}:
     get:
       tags:
         - service
@@ -2950,6 +2981,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -3124,6 +3156,7 @@ paths:
                             - type: string
                             - type: string
                             - nullable: true
+                          default: null
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -3153,7 +3186,7 @@ paths:
                 required:
                   - data
                   - links
-  "/locations/{id}":
+  /locations/{id}:
     get:
       tags:
         - location
@@ -3260,6 +3293,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -3365,8 +3399,7 @@ paths:
         - schema:
             type: string
             nullable: true
-            description:
-              Practitioner role name – can be one of the predefined roles or a
+            description: Practitioner role name – can be one of the predefined roles or a
               custom user-defined role
             example: practitioner admin
           required: false
@@ -3426,8 +3459,7 @@ paths:
                           example: Practitioner admin of Hogwarts
                         roleName:
                           type: string
-                          description:
-                            Practitioner role name – can be one of the predefined roles or a
+                          description: Practitioner role name – can be one of the predefined roles or a
                             custom user-defined role
                           example: practitioner admin
                         onlineBooking:
@@ -3486,6 +3518,7 @@ paths:
                             - type: string
                             - type: string
                             - nullable: true
+                          default: null
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -3513,7 +3546,7 @@ paths:
                 required:
                   - data
                   - links
-  "/practitioners/{id}":
+  /practitioners/{id}:
     get:
       tags:
         - practitioner
@@ -3579,8 +3612,7 @@ paths:
                     example: Practitioner admin of Hogwarts
                   roleName:
                     type: string
-                    description:
-                      Practitioner role name – can be one of the predefined roles or a
+                    description: Practitioner role name – can be one of the predefined roles or a
                       custom user-defined role
                     example: practitioner admin
                   onlineBooking:
@@ -3639,6 +3671,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -3740,6 +3773,7 @@ paths:
               - Did not arrive
               - Cancelled
               - Completed
+            default: null
             description: Patient status of this appointment
           required: false
           name: status
@@ -3800,6 +3834,15 @@ paths:
                           nullable: true
                           default: false
                           description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                        busyTimePractitionerIds:
+                          type: array
+                          items:
+                            type: integer
+                            minimum: 0
+                            exclusiveMinimum: true
+                            example: 1
+                          default: &a11 []
+                          description: The practitioner ids of this multiple practitioners busy time
                         serviceId:
                           type: integer
                           nullable: true
@@ -3815,6 +3858,7 @@ paths:
                           example: 1
                         practitionerId:
                           type: integer
+                          nullable: true
                           minimum: 0
                           exclusiveMinimum: true
                           description: The practitioner id of this appointment
@@ -3824,8 +3868,7 @@ paths:
                           minimum: 0
                           exclusiveMinimum: true
                           default: 1
-                          description:
-                            The max patient number of this appointment. A number greater than 1
+                          description: The max patient number of this appointment. A number greater than 1
                             indicates a group appointment.
                         appointmentPatients:
                           type: array
@@ -3855,6 +3898,7 @@ paths:
                                 type: string
                                 nullable: true
                                 enum: *a10
+                                default: null
                                 description: Patient status of this appointment
                               note:
                                 type: string
@@ -3920,7 +3964,7 @@ paths:
                         unit:
                           type: string
                           nullable: true
-                          enum: &a11
+                          enum: &a12
                             - Hour
                             - Each
                           default: Hour
@@ -3951,7 +3995,7 @@ paths:
                             exclusiveMinimum: true
                             example: 1
                           description: Array of support item ids of this appointment
-                          example: &a12
+                          example: &a13
                             - 1
                         note:
                           type: string
@@ -3980,6 +4024,7 @@ paths:
                             - type: string
                             - type: string
                             - nullable: true
+                          default: null
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -4090,6 +4135,7 @@ paths:
                     - type: string
                     - type: string
                     - nullable: true
+                  default: null
                   description: Object archived date time
                   example: 2023-07-30T09:00:00Z
               required:
@@ -4131,6 +4177,15 @@ paths:
                     nullable: true
                     default: false
                     description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                  busyTimePractitionerIds:
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      exclusiveMinimum: true
+                      example: 1
+                    default: *a11
+                    description: The practitioner ids of this multiple practitioners busy time
                   serviceId:
                     type: integer
                     nullable: true
@@ -4146,6 +4201,7 @@ paths:
                     example: 1
                   practitionerId:
                     type: integer
+                    nullable: true
                     minimum: 0
                     exclusiveMinimum: true
                     description: The practitioner id of this appointment
@@ -4155,8 +4211,7 @@ paths:
                     minimum: 0
                     exclusiveMinimum: true
                     default: 1
-                    description:
-                      The max patient number of this appointment. A number greater than 1
+                    description: The max patient number of this appointment. A number greater than 1
                       indicates a group appointment.
                   appointmentPatients:
                     type: array
@@ -4186,6 +4241,7 @@ paths:
                           type: string
                           nullable: true
                           enum: *a10
+                          default: null
                           description: Patient status of this appointment
                         note:
                           type: string
@@ -4251,7 +4307,7 @@ paths:
                   unit:
                     type: string
                     nullable: true
-                    enum: *a11
+                    enum: *a12
                     default: Hour
                     description: The appointment unit
                   pricing:
@@ -4280,7 +4336,7 @@ paths:
                       exclusiveMinimum: true
                       example: 1
                     description: Array of support item ids of this appointment
-                    example: *a12
+                    example: *a13
                   note:
                     type: string
                     nullable: true
@@ -4308,6 +4364,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -4328,7 +4385,7 @@ paths:
                   - supportItemIds
                   - note
                   - deletedAt
-  "/appointments/{id}":
+  /appointments/{id}:
     get:
       tags:
         - appointment
@@ -4376,6 +4433,15 @@ paths:
                     nullable: true
                     default: false
                     description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                  busyTimePractitionerIds:
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      exclusiveMinimum: true
+                      example: 1
+                    default: *a11
+                    description: The practitioner ids of this multiple practitioners busy time
                   serviceId:
                     type: integer
                     nullable: true
@@ -4391,6 +4457,7 @@ paths:
                     example: 1
                   practitionerId:
                     type: integer
+                    nullable: true
                     minimum: 0
                     exclusiveMinimum: true
                     description: The practitioner id of this appointment
@@ -4400,8 +4467,7 @@ paths:
                     minimum: 0
                     exclusiveMinimum: true
                     default: 1
-                    description:
-                      The max patient number of this appointment. A number greater than 1
+                    description: The max patient number of this appointment. A number greater than 1
                       indicates a group appointment.
                   appointmentPatients:
                     type: array
@@ -4431,6 +4497,7 @@ paths:
                           type: string
                           nullable: true
                           enum: *a10
+                          default: null
                           description: Patient status of this appointment
                         note:
                           type: string
@@ -4496,7 +4563,7 @@ paths:
                   unit:
                     type: string
                     nullable: true
-                    enum: *a11
+                    enum: *a12
                     default: Hour
                     description: The appointment unit
                   pricing:
@@ -4525,7 +4592,7 @@ paths:
                       exclusiveMinimum: true
                       example: 1
                     description: Array of support item ids of this appointment
-                    example: *a12
+                    example: *a13
                   note:
                     type: string
                     nullable: true
@@ -4553,6 +4620,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -4863,6 +4931,7 @@ paths:
                             - type: string
                             - type: string
                             - nullable: true
+                          default: null
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -4898,7 +4967,7 @@ paths:
                 required:
                   - data
                   - links
-  "/support-activities/{id}":
+  /support-activities/{id}:
     get:
       tags:
         - support-activity
@@ -5049,6 +5118,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -5156,7 +5226,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: &a13
+                          enum: &a14
                             - Provider Travel
                             - Provider Travel - Non-Labour Costs
                             - Activity Based Transport
@@ -5196,6 +5266,7 @@ paths:
                           type: number
                           nullable: true
                           description: The support item quantity
+                          example: null
                         note:
                           type: string
                           nullable: true
@@ -5218,6 +5289,7 @@ paths:
                             - type: string
                             - type: string
                             - nullable: true
+                          default: null
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -5247,7 +5319,7 @@ paths:
                 required:
                   - data
                   - links
-  "/support-items/{id}":
+  /support-items/{id}:
     get:
       tags:
         - support-item
@@ -5286,7 +5358,7 @@ paths:
                     example: 1
                   type:
                     type: string
-                    enum: *a13
+                    enum: *a14
                     description: Support item type
                     example: Provider Travel
                   itemCode:
@@ -5323,6 +5395,7 @@ paths:
                     type: number
                     nullable: true
                     description: The support item quantity
+                    example: null
                   note:
                     type: string
                     nullable: true
@@ -5345,6 +5418,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -5439,7 +5513,7 @@ paths:
         - schema:
             type: string
             nullable: true
-            enum: &a14
+            enum: &a15
               - Draft
               - Awaiting Payment
               - Paid
@@ -5521,7 +5595,7 @@ paths:
                           example: 193.99
                         taxStatus:
                           type: string
-                          enum: &a15
+                          enum: &a16
                             - including
                             - excluding
                             - no tax
@@ -5544,7 +5618,7 @@ paths:
                           example: 193.99
                         status:
                           type: string
-                          enum: *a14
+                          enum: *a15
                           description: Invoice status
                           example: Paid
                         invoiceItems:
@@ -5560,7 +5634,7 @@ paths:
                                 example: 1
                               type:
                                 type: string
-                                enum: &a16
+                                enum: &a17
                                   - appointment
                                   - supportActivity
                                   - supportItem
@@ -5639,7 +5713,7 @@ paths:
                           items:
                             type: string
                           description: Invoice provider numbers
-                          example: &a17
+                          example: &a18
                             - "Medicare: 12345678"
                         isArchived:
                           type: boolean
@@ -5703,7 +5777,7 @@ paths:
                 required:
                   - data
                   - links
-  "/invoices/{id}":
+  /invoices/{id}:
     get:
       tags:
         - invoice
@@ -5788,7 +5862,7 @@ paths:
                     example: 193.99
                   taxStatus:
                     type: string
-                    enum: *a15
+                    enum: *a16
                     description: Invoice tax status
                     example: excluding
                   tax:
@@ -5808,7 +5882,7 @@ paths:
                     example: 193.99
                   status:
                     type: string
-                    enum: *a14
+                    enum: *a15
                     description: Invoice status
                     example: Paid
                   invoiceItems:
@@ -5824,7 +5898,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: *a16
+                          enum: *a17
                           description: Invoice item type
                           example: appointment
                         typeId:
@@ -5896,7 +5970,7 @@ paths:
                     items:
                       type: string
                     description: Invoice provider numbers
-                    example: *a17
+                    example: *a18
                   isArchived:
                     type: boolean
                     nullable: true
@@ -6019,7 +6093,7 @@ paths:
                 required:
                   - data
                   - links
-  "/payment-methods/{id}":
+  /payment-methods/{id}:
     get:
       tags:
         - payment-method
@@ -6129,8 +6203,7 @@ paths:
         - schema:
             type: integer
             nullable: true
-            description:
-              The user group id of the practitioner associated to the waitlist
+            description: The user group id of the practitioner associated to the waitlist
               item
             example: 12
           required: false
@@ -6258,7 +6331,7 @@ paths:
                           items:
                             type: number
                           description: The id list of services the waitlist item is waiting for
-                          example: &a18
+                          example: &a19
                             - 1
                             - 2
                             - 3
@@ -6267,7 +6340,7 @@ paths:
                           items:
                             type: string
                           description: Preferred days of the waitlist item
-                          example: &a19
+                          example: &a20
                             - Monday
                             - Tuesday
                         preferredTime:
@@ -6276,7 +6349,7 @@ paths:
                           items:
                             type: string
                           description: Preferred time of service for the waitlist item
-                          example: &a20
+                          example: &a21
                             - morning
                             - afternoon
                             - evening
@@ -6286,7 +6359,7 @@ paths:
                           items:
                             type: string
                           description: The waitlist tag ids of the waitlist item
-                          example: &a21
+                          example: &a22
                             - High
                             - Medium
                             - Low
@@ -6329,7 +6402,7 @@ paths:
                 required:
                   - data
                   - links
-  "/waitlists/{id}":
+  /waitlists/{id}:
     get:
       tags:
         - waitlist
@@ -6386,27 +6459,27 @@ paths:
                     items:
                       type: number
                     description: The id list of services the waitlist item is waiting for
-                    example: *a18
+                    example: *a19
                   preferredDays:
                     type: array
                     items:
                       type: string
                     description: Preferred days of the waitlist item
-                    example: *a19
+                    example: *a20
                   preferredTime:
                     type: array
                     nullable: true
                     items:
                       type: string
                     description: Preferred time of service for the waitlist item
-                    example: *a20
+                    example: *a21
                   waitlistTags:
                     type: array
                     nullable: true
                     items:
                       type: string
                     description: The waitlist tag ids of the waitlist item
-                    example: *a21
+                    example: *a22
                   archived:
                     type: boolean
                     nullable: true
@@ -6581,7 +6654,7 @@ paths:
                           items:
                             type: string
                           description: The screener tag ids of the screener item
-                          example: &a22
+                          example: &a23
                             - High
                             - Medium
                             - Low
@@ -6621,7 +6694,7 @@ paths:
                 required:
                   - data
                   - links
-  "/screeners/{id}":
+  /screeners/{id}:
     get:
       tags:
         - screener
@@ -6672,7 +6745,7 @@ paths:
                     items:
                       type: string
                     description: The screener tag ids of the screener item
-                    example: *a22
+                    example: *a23
                   archived:
                     type: boolean
                     nullable: true
@@ -6840,7 +6913,7 @@ paths:
                           example: 1
                         status:
                           type: string
-                          enum: &a23
+                          enum: &a24
                             - Incomplete
                             - In progress
                             - Completed
@@ -6891,7 +6964,7 @@ paths:
                 required:
                   - data
                   - links
-  "/patient-forms/{id}":
+  /patient-forms/{id}:
     get:
       tags:
         - patient-form
@@ -6980,7 +7053,7 @@ paths:
                     example: 1
                   status:
                     type: string
-                    enum: *a23
+                    enum: *a24
                     description: Status
                     example: Completed
                   templateId:
@@ -7185,7 +7258,7 @@ paths:
                           example: Notes
                         trackType:
                           type: string
-                          enum: &a24
+                          enum: &a25
                             - Appointments
                             - Hours
                             - Budget
@@ -7226,7 +7299,7 @@ paths:
                                 example: 1
                               type:
                                 type: string
-                                enum: &a25
+                                enum: &a26
                                   - Appointment
                                   - SupportActivity
                                   - File
@@ -7312,7 +7385,7 @@ paths:
                 required:
                   - data
                   - links
-  "/cases/{id}":
+  /cases/{id}:
     get:
       tags:
         - case
@@ -7395,7 +7468,7 @@ paths:
                     example: Notes
                   trackType:
                     type: string
-                    enum: *a24
+                    enum: *a25
                     description: Track type
                     example: Budget
                   hours:
@@ -7433,7 +7506,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: *a25
+                          enum: *a26
                           description: Item type
                           example: Appointment
                       required:
@@ -7579,9 +7652,10 @@ paths:
         - schema:
             type: string
             nullable: true
-            enum: &a26
+            enum: &a27
               - Sent
               - Viewed
+            default: null
             description: Search for credit notes of this sent status
             example: Sent
           required: false
@@ -7640,7 +7714,8 @@ paths:
                         sentStatus:
                           type: string
                           nullable: true
-                          enum: *a26
+                          enum: *a27
+                          default: null
                           description: Credit note status
                           example: Sent
                         creditNoteItems:
@@ -7707,7 +7782,7 @@ paths:
                               - invoiceId
                               - paymentId
                               - amount
-                          default: &a27 []
+                          default: &a28 []
                         description:
                           type: string
                           nullable: true
@@ -7730,6 +7805,7 @@ paths:
                             - type: string
                             - type: string
                             - nullable: true
+                          default: null
                           description: Object archived date time
                           example: 2023-07-30T09:00:00Z
                       required:
@@ -7757,7 +7833,7 @@ paths:
                 required:
                   - data
                   - links
-  "/credit-notes/{id}":
+  /credit-notes/{id}:
     get:
       tags:
         - credit-note
@@ -7822,7 +7898,8 @@ paths:
                   sentStatus:
                     type: string
                     nullable: true
-                    enum: *a26
+                    enum: *a27
+                    default: null
                     description: Credit note status
                     example: Sent
                   creditNoteItems:
@@ -7889,7 +7966,7 @@ paths:
                         - invoiceId
                         - paymentId
                         - amount
-                    default: *a27
+                    default: *a28
                   description:
                     type: string
                     nullable: true
@@ -7912,6 +7989,7 @@ paths:
                       - type: string
                       - type: string
                       - nullable: true
+                    default: null
                     description: Object archived date time
                     example: 2023-07-30T09:00:00Z
                 required:
@@ -7925,12 +8003,11 @@ paths:
                   - creditNoteItems
                   - description
                   - deletedAt
-  "/availabilities/{practitionerId}":
+  /availabilities/{practitionerId}:
     get:
       tags:
         - availability
-      description:
-        Get all availabilities of a practitioner in the specified date
+      description: Get all availabilities of a practitioner in the specified date
         range, max 100 days
       summary: Get all availabilities of a practitioner
       security:
@@ -8186,7 +8263,7 @@ paths:
                               - invoiceId
                               - amount
                           description: Credit allocated to invoices
-                          example: &a28 []
+                          example: &a29 []
                         xeroId:
                           type: string
                           nullable: true
@@ -8198,6 +8275,7 @@ paths:
                             - type: string
                             - nullable: true
                           description: Payment archive date time
+                          example: null
                         archived:
                           type: boolean
                           nullable: true
@@ -8263,8 +8341,7 @@ paths:
                 amount:
                   type: number
                   nullable: true
-                  description:
-                    Total payment amount, it should be the same as the sum of all
+                  description: Total payment amount, it should be the same as the sum of all
                     paymentInvoice amount
                   example: 193.99
                 paymentDate:
@@ -8401,7 +8478,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a28
+                    example: *a29
                   xeroId:
                     type: string
                     nullable: true
@@ -8413,6 +8490,7 @@ paths:
                       - type: string
                       - nullable: true
                     description: Payment archive date time
+                    example: null
                   archived:
                     type: boolean
                     nullable: true
@@ -8430,7 +8508,7 @@ paths:
                   - creditAllocations
                   - xeroId
                   - archivedAt
-  "/payments/{id}":
+  /payments/{id}:
     get:
       tags:
         - payment
@@ -8541,7 +8619,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a28
+                    example: *a29
                   xeroId:
                     type: string
                     nullable: true
@@ -8553,6 +8631,7 @@ paths:
                       - type: string
                       - nullable: true
                     description: Payment archive date time
+                    example: null
                   archived:
                     type: boolean
                     nullable: true
@@ -8570,7 +8649,7 @@ paths:
                   - creditAllocations
                   - xeroId
                   - archivedAt
-  "/payments/{paymentId}":
+  /payments/{paymentId}:
     delete:
       tags:
         - payment
@@ -8596,7 +8675,7 @@ paths:
                 type: number
                 enum:
                   - 1
-  "/support-Items/{id}":
+  /support-Items/{id}:
     put:
       tags:
         - support-item
@@ -8648,7 +8727,7 @@ paths:
                 type: number
                 enum:
                   - 1
-  "/patients/{id}/file":
+  /patients/{id}/file:
     post:
       tags:
         - patient
@@ -8701,7 +8780,7 @@ paths:
           description: Patient not found
         "500":
           description: Error storing file
-  "/patients/{id}/custom-field":
+  /patients/{id}/custom-field:
     put:
       tags:
         - patient
@@ -8795,6 +8874,7 @@ paths:
                         - type: string
                         - type: string
                         - nullable: true
+                      default: null
                       description: Object archived date time
                       example: 2023-07-30T09:00:00Z
                     options:
@@ -8825,6 +8905,7 @@ paths:
                               - type: string
                               - type: string
                               - nullable: true
+                            default: null
                             description: Object archived date time
                             example: 2023-07-30T09:00:00Z
                         required:
