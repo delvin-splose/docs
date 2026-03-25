@@ -3833,7 +3833,14 @@ paths:
                           type: boolean
                           nullable: true
                           default: false
-                          description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                          description: >-
+                            **@deprecated** - please refer to the new
+                            [busy-time](/api-reference/endpoints/busy-time)
+                            endpoint. 
+
+                            Whether this time slot is unavailable, eg. busy time
+                            or meeting
+                          deprecated: true
                         busyTimePractitionerIds:
                           type: array
                           items:
@@ -3842,7 +3849,14 @@ paths:
                             exclusiveMinimum: true
                             example: 1
                           default: &a11 []
-                          description: The practitioner ids of this multiple practitioners busy time
+                          description: >-
+                            **@deprecated** - please refer to the new
+                            [busy-time](/api-reference/endpoints/busy-time)
+                            endpoint. 
+
+                            The practitioner ids of this multiple practitioners
+                            busy time
+                          deprecated: true
                         serviceId:
                           type: integer
                           nullable: true
@@ -4176,7 +4190,13 @@ paths:
                     type: boolean
                     nullable: true
                     default: false
-                    description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                    description: >-
+                      **@deprecated** - please refer to the new
+                      [busy-time](/api-reference/endpoints/busy-time) endpoint. 
+
+                      Whether this time slot is unavailable, eg. busy time or
+                      meeting
+                    deprecated: true
                   busyTimePractitionerIds:
                     type: array
                     items:
@@ -4185,7 +4205,13 @@ paths:
                       exclusiveMinimum: true
                       example: 1
                     default: *a11
-                    description: The practitioner ids of this multiple practitioners busy time
+                    description: >-
+                      **@deprecated** - please refer to the new
+                      [busy-time](/api-reference/endpoints/busy-time) endpoint. 
+
+                      The practitioner ids of this multiple practitioners busy
+                      time
+                    deprecated: true
                   serviceId:
                     type: integer
                     nullable: true
@@ -4432,7 +4458,13 @@ paths:
                     type: boolean
                     nullable: true
                     default: false
-                    description: "Whether this time slot is unavailable, eg. busy time or meeting "
+                    description: >-
+                      **@deprecated** - please refer to the new
+                      [busy-time](/api-reference/endpoints/busy-time) endpoint. 
+
+                      Whether this time slot is unavailable, eg. busy time or
+                      meeting
+                    deprecated: true
                   busyTimePractitionerIds:
                     type: array
                     items:
@@ -4441,7 +4473,13 @@ paths:
                       exclusiveMinimum: true
                       example: 1
                     default: *a11
-                    description: The practitioner ids of this multiple practitioners busy time
+                    description: >-
+                      **@deprecated** - please refer to the new
+                      [busy-time](/api-reference/endpoints/busy-time) endpoint. 
+
+                      The practitioner ids of this multiple practitioners busy
+                      time
+                    deprecated: true
                   serviceId:
                     type: integer
                     nullable: true
@@ -4716,6 +4754,569 @@ paths:
                 type: number
                 enum:
                   - 1
+  /busy-times:
+    get:
+      tags:
+        - busy-time
+      x-mint:
+        metadata:
+          tag: NEW
+      description: Get a paged array of busy-times
+      summary: Get a paged array of busy-times
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a5
+            default: "false"
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
+            description: Search for busy times that start after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: start_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+              - nullable: true
+            description: Search for busy times thatstart before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: start_lt
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for busy times with this busy time type id
+          required: false
+          name: busyTimeTypeId
+          in: query
+      responses:
+        "200":
+          description: A paged array of busy-times
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Busy time id
+                          example: 1
+                        start:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Busy time start date time
+                          example: 2023-07-30T09:00:00Z
+                        end:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Busy time end date time
+                          example: 2023-07-30T09:00:00Z
+                        locationId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: The location id of this busy time
+                          example: 1
+                        practitionerIds:
+                          type: array
+                          items:
+                            type: integer
+                            minimum: 0
+                            exclusiveMinimum: true
+                            example: 1
+                          description: The practitioner ids of this multiple practitioners busy time
+                        busyTimeTypeId:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          exclusiveMinimum: true
+                          default: null
+                          description: The busy time type id of this multiple practitioners busy time
+                          example: 1
+                        repeatId:
+                          type: string
+                          nullable: true
+                          description: An recurring busy time will have this repeat id
+                          example: 12345678-abcd-4321-dcba-12a34b56c78d
+                        recurringRule:
+                          type: string
+                          nullable: true
+                          description: The rule for recurring busy time
+                          example: DTSTART:2023080T010000ZRRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=6
+                        note:
+                          type: string
+                          nullable: true
+                          description: Busy time note
+                          example: Daily stand-up
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the busy time type has been archived
+                        createdAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          default: null
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - start
+                        - end
+                        - locationId
+                        - practitionerIds
+                        - repeatId
+                        - recurringRule
+                        - note
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  /busy-times/{id}:
+    get:
+      tags:
+        - busy-time
+      x-mint:
+        metadata:
+          tag: NEW
+      description: Get busy-time data by id
+      summary: Get a single busy-time
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with busy-time data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Busy time id
+                    example: 1
+                  start:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Busy time start date time
+                    example: 2023-07-30T09:00:00Z
+                  end:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Busy time end date time
+                    example: 2023-07-30T09:00:00Z
+                  locationId:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: The location id of this busy time
+                    example: 1
+                  practitionerIds:
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      exclusiveMinimum: true
+                      example: 1
+                    description: The practitioner ids of this multiple practitioners busy time
+                  busyTimeTypeId:
+                    type: integer
+                    nullable: true
+                    minimum: 0
+                    exclusiveMinimum: true
+                    default: null
+                    description: The busy time type id of this multiple practitioners busy time
+                    example: 1
+                  repeatId:
+                    type: string
+                    nullable: true
+                    description: An recurring busy time will have this repeat id
+                    example: 12345678-abcd-4321-dcba-12a34b56c78d
+                  recurringRule:
+                    type: string
+                    nullable: true
+                    description: The rule for recurring busy time
+                    example: DTSTART:2023080T010000ZRRULE:FREQ=WEEKLY;INTERVAL=2;COUNT=6
+                  note:
+                    type: string
+                    nullable: true
+                    description: Busy time note
+                    example: Daily stand-up
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the busy time type has been archived
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    default: null
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - start
+                  - end
+                  - locationId
+                  - practitionerIds
+                  - repeatId
+                  - recurringRule
+                  - note
+                  - deletedAt
+  /busy-time-types:
+    get:
+      tags:
+        - busy-time-type
+      x-mint:
+        metadata:
+          tag: NEW
+      description: Get a paged array of busy-time-types
+      summary: Get a paged array of busy-time-types
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the next page
+            example: 200
+          required: false
+          name: id_gt
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            description: The starting object id of the previous page
+            example: 100
+          required: false
+          name: id_lt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated after this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_gt
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+              - type: string
+            description: Search for objects updated before this date time
+            example: 2023-07-30T09:00:00Z
+          required: false
+          name: update_lt
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            enum: *a5
+            default: "false"
+            description: Whether archived objects should be retrieved, default is false
+          required: false
+          name: include_archived
+          in: query
+        - schema:
+            type: string
+            nullable: true
+            description: Busy time type title
+            example: Meeting
+          required: false
+          name: title
+          in: query
+        - schema:
+            type: boolean
+            nullable: true
+            default: false
+            description: Whether this busy time type includes utilisation
+          required: false
+          name: isUtilisationIncluded
+          in: query
+      responses:
+        "200":
+          description: A paged array of busy-time-types
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Busy time type id
+                          example: 1
+                        title:
+                          type: string
+                          description: Busy time type title
+                          example: Meeting
+                        color:
+                          type: string
+                          description: Busy time type color (hex)
+                          example: "#72a2c3"
+                        duration:
+                          type: number
+                          description: Busy time type duration (minutes)
+                          example: 60
+                        isUtilisationIncluded:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether this busy time type includes utilisation
+                        note:
+                          type: string
+                          nullable: true
+                          description: Busy time type note
+                          example: Daily stand-up
+                        archived:
+                          type: boolean
+                          nullable: true
+                          default: false
+                          description: Whether the busy time type has been archived
+                        createdAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object creation date time
+                          example: 2023-07-30T09:00:00Z
+                        updatedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                          description: Object update date time
+                          example: 2023-07-30T09:00:00Z
+                        deletedAt:
+                          anyOf:
+                            - type: string
+                            - type: string
+                            - nullable: true
+                          default: null
+                          description: Object archived date time
+                          example: 2023-07-30T09:00:00Z
+                      required:
+                        - id
+                        - title
+                        - color
+                        - duration
+                        - note
+                        - deletedAt
+                  links:
+                    type: object
+                    properties:
+                      previousPage:
+                        type: string
+                        description: The link to retrieve next page
+                        example: /v1/${object_type}?id_gt=200
+                      nextPage:
+                        type: string
+                        description: The link to retrieve previous page
+                        example: /v1/${object_type}?id_lt=100
+                required:
+                  - data
+                  - links
+  /busy-time-types/{id}:
+    get:
+      tags:
+        - busy-time-type
+      x-mint:
+        metadata:
+          tag: NEW
+      description: Get busy-time-type data by id
+      summary: Get a single busy-time-type
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Object with busy-time-type data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Busy time type id
+                    example: 1
+                  title:
+                    type: string
+                    description: Busy time type title
+                    example: Meeting
+                  color:
+                    type: string
+                    description: Busy time type color (hex)
+                    example: "#72a2c3"
+                  duration:
+                    type: number
+                    description: Busy time type duration (minutes)
+                    example: 60
+                  isUtilisationIncluded:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether this busy time type includes utilisation
+                  note:
+                    type: string
+                    nullable: true
+                    description: Busy time type note
+                    example: Daily stand-up
+                  archived:
+                    type: boolean
+                    nullable: true
+                    default: false
+                    description: Whether the busy time type has been archived
+                  createdAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object creation date time
+                    example: 2023-07-30T09:00:00Z
+                  updatedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                    description: Object update date time
+                    example: 2023-07-30T09:00:00Z
+                  deletedAt:
+                    anyOf:
+                      - type: string
+                      - type: string
+                      - nullable: true
+                    default: null
+                    description: Object archived date time
+                    example: 2023-07-30T09:00:00Z
+                required:
+                  - id
+                  - title
+                  - color
+                  - duration
+                  - note
+                  - deletedAt
   /support-activities:
     get:
       tags:
