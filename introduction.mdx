@@ -101,7 +101,13 @@ description: "Welcome to the splose API documentation. splose serves as a compre
 
 
     # Changelog
-
+    
+    + 2025-06-20
+        + add `busy-time` endpoint
+        + add `busy-time-type` endpoint
+        + deprecate `busyTimePractitionerIds` and `isUnavailableBlock` on `appointment` endpoint
+        + migration: phasing out "busy times" from the `appointment` endpoint to a dedicated `busy-time` endpoint 
+        
     + 2025-06-20
         + add `credit-note` endpoint
 
