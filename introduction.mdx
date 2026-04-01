@@ -6,7 +6,7 @@ description: "Welcome to the splose API documentation. splose serves as a compre
     The splose API follows a REST architectural style, offering JSON-encoded responses, standard HTTP response codes, easily understandable resource-oriented URLs, and robust authentication mechanisms.
 
     When making requests, please note the following:
-      - **Query Efficiency:** Be considerate of system resources and avoid making an excessive number of requests.
+      - **Query Efficiency:** Be considerate of system resources and avoid making unoptimized requests. We reserve the right to terminate API access if your average request latency exceeds 1 second over the course of 5 minutes.
       - **User-Agent Header:** All API calls must include a valid `User-Agent` header. Requests without it will be rejected."
 
     # Server
@@ -101,13 +101,13 @@ description: "Welcome to the splose API documentation. splose serves as a compre
 
 
     # Changelog
-    
+
     + 2026-03-27
         + add `busy-time` endpoint
         + add `busy-time-type` endpoint
         + deprecate `busyTimePractitionerIds` and `isUnavailableBlock` on `appointment` endpoint
-        + migration: phasing out "busy times" from the `appointment` endpoint to a dedicated `busy-time` endpoint 
-        
+        + migration: phasing out "busy times" from the `appointment` endpoint to a dedicated `busy-time` endpoint
+
     + 2025-06-20
         + add `credit-note` endpoint
 
