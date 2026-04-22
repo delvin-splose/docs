@@ -3139,6 +3139,18 @@ paths:
                           nullable: true
                           default: false
                           description: Whether the location has been archived
+                        associatedServiceIds:
+                          type: array
+                          items:
+                            type: integer
+                            minimum: 0
+                            exclusiveMinimum: true
+                            example: 1
+                          description: Array of service ids associated with this location
+                          example: &a10
+                            - 1
+                            - 2
+                            - 3
                         createdAt:
                           anyOf:
                             - type: string
@@ -3171,6 +3183,7 @@ paths:
                         - phone
                         - email
                         - timezone
+                        - associatedServiceIds
                         - deletedAt
                   links:
                     type: object
@@ -3276,6 +3289,15 @@ paths:
                     nullable: true
                     default: false
                     description: Whether the location has been archived
+                  associatedServiceIds:
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      exclusiveMinimum: true
+                      example: 1
+                    description: Array of service ids associated with this location
+                    example: *a10
                   createdAt:
                     anyOf:
                       - type: string
@@ -3308,6 +3330,7 @@ paths:
                   - phone
                   - email
                   - timezone
+                  - associatedServiceIds
                   - deletedAt
   /practitioners:
     get:
@@ -3472,6 +3495,30 @@ paths:
                           nullable: true
                           description: Practitioner timezone
                           example: Australia/Adelaide
+                        connections:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              typeId:
+                                type: integer
+                                minimum: 0
+                                exclusiveMinimum: true
+                                description: Item type id
+                                example: 1
+                              type:
+                                type: string
+                                enum: &a11
+                                  - Location
+                                  - Service
+                                description: Item type
+                                example: Location
+                            required:
+                              - typeId
+                              - type
+                            additionalProperties: false
+                          description: Array of practitioner connections (locations/services) associated
+                            with this practitioner
                         providerNumbers:
                           type: array
                           items:
@@ -3530,6 +3577,7 @@ paths:
                         - profession
                         - description
                         - roleName
+                        - connections
                         - providerNumbers
                         - deletedAt
                   links:
@@ -3625,6 +3673,28 @@ paths:
                     nullable: true
                     description: Practitioner timezone
                     example: Australia/Adelaide
+                  connections:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        typeId:
+                          type: integer
+                          minimum: 0
+                          exclusiveMinimum: true
+                          description: Item type id
+                          example: 1
+                        type:
+                          type: string
+                          enum: *a11
+                          description: Item type
+                          example: Location
+                      required:
+                        - typeId
+                        - type
+                      additionalProperties: false
+                    description: Array of practitioner connections (locations/services) associated
+                      with this practitioner
                   providerNumbers:
                     type: array
                     items:
@@ -3683,6 +3753,7 @@ paths:
                   - profession
                   - description
                   - roleName
+                  - connections
                   - providerNumbers
                   - deletedAt
   /appointments:
@@ -3768,7 +3839,7 @@ paths:
         - schema:
             type: string
             nullable: true
-            enum: &a10
+            enum: &a12
               - Arrived
               - Did not arrive
               - Cancelled
@@ -3848,7 +3919,7 @@ paths:
                             minimum: 0
                             exclusiveMinimum: true
                             example: 1
-                          default: &a11 []
+                          default: &a13 []
                           description: >-
                             **@deprecated** - please refer to the new
                             [busy-time](/api-reference/endpoints/busy-time)
@@ -3911,7 +3982,7 @@ paths:
                               status:
                                 type: string
                                 nullable: true
-                                enum: *a10
+                                enum: *a12
                                 default: null
                                 description: Patient status of this appointment
                               note:
@@ -3978,7 +4049,7 @@ paths:
                         unit:
                           type: string
                           nullable: true
-                          enum: &a12
+                          enum: &a14
                             - Hour
                             - Each
                           default: Hour
@@ -4009,7 +4080,7 @@ paths:
                             exclusiveMinimum: true
                             example: 1
                           description: Array of support item ids of this appointment
-                          example: &a13
+                          example: &a15
                             - 1
                         note:
                           type: string
@@ -4204,7 +4275,7 @@ paths:
                       minimum: 0
                       exclusiveMinimum: true
                       example: 1
-                    default: *a11
+                    default: *a13
                     description: >-
                       **@deprecated** - please refer to the new
                       [busy-time](/api-reference/endpoints/busy-time) endpoint. 
@@ -4266,7 +4337,7 @@ paths:
                         status:
                           type: string
                           nullable: true
-                          enum: *a10
+                          enum: *a12
                           default: null
                           description: Patient status of this appointment
                         note:
@@ -4333,7 +4404,7 @@ paths:
                   unit:
                     type: string
                     nullable: true
-                    enum: *a12
+                    enum: *a14
                     default: Hour
                     description: The appointment unit
                   pricing:
@@ -4362,7 +4433,7 @@ paths:
                       exclusiveMinimum: true
                       example: 1
                     description: Array of support item ids of this appointment
-                    example: *a13
+                    example: *a15
                   note:
                     type: string
                     nullable: true
@@ -4472,7 +4543,7 @@ paths:
                       minimum: 0
                       exclusiveMinimum: true
                       example: 1
-                    default: *a11
+                    default: *a13
                     description: >-
                       **@deprecated** - please refer to the new
                       [busy-time](/api-reference/endpoints/busy-time) endpoint. 
@@ -4534,7 +4605,7 @@ paths:
                         status:
                           type: string
                           nullable: true
-                          enum: *a10
+                          enum: *a12
                           default: null
                           description: Patient status of this appointment
                         note:
@@ -4601,7 +4672,7 @@ paths:
                   unit:
                     type: string
                     nullable: true
-                    enum: *a12
+                    enum: *a14
                     default: Hour
                     description: The appointment unit
                   pricing:
@@ -4630,7 +4701,7 @@ paths:
                       exclusiveMinimum: true
                       example: 1
                     description: Array of support item ids of this appointment
-                    example: *a13
+                    example: *a15
                   note:
                     type: string
                     nullable: true
@@ -5827,7 +5898,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: &a14
+                          enum: &a16
                             - Provider Travel
                             - Provider Travel - Non-Labour Costs
                             - Activity Based Transport
@@ -5959,7 +6030,7 @@ paths:
                     example: 1
                   type:
                     type: string
-                    enum: *a14
+                    enum: *a16
                     description: Support item type
                     example: Provider Travel
                   itemCode:
@@ -6114,7 +6185,7 @@ paths:
         - schema:
             type: string
             nullable: true
-            enum: &a15
+            enum: &a17
               - Draft
               - Awaiting Payment
               - Paid
@@ -6196,7 +6267,7 @@ paths:
                           example: 193.99
                         taxStatus:
                           type: string
-                          enum: &a16
+                          enum: &a18
                             - including
                             - excluding
                             - no tax
@@ -6219,7 +6290,7 @@ paths:
                           example: 193.99
                         status:
                           type: string
-                          enum: *a15
+                          enum: *a17
                           description: Invoice status
                           example: Paid
                         invoiceItems:
@@ -6235,7 +6306,7 @@ paths:
                                 example: 1
                               type:
                                 type: string
-                                enum: &a17
+                                enum: &a19
                                   - appointment
                                   - supportActivity
                                   - supportItem
@@ -6314,7 +6385,7 @@ paths:
                           items:
                             type: string
                           description: Invoice provider numbers
-                          example: &a18
+                          example: &a20
                             - "Medicare: 12345678"
                         isArchived:
                           type: boolean
@@ -6463,7 +6534,7 @@ paths:
                     example: 193.99
                   taxStatus:
                     type: string
-                    enum: *a16
+                    enum: *a18
                     description: Invoice tax status
                     example: excluding
                   tax:
@@ -6483,7 +6554,7 @@ paths:
                     example: 193.99
                   status:
                     type: string
-                    enum: *a15
+                    enum: *a17
                     description: Invoice status
                     example: Paid
                   invoiceItems:
@@ -6499,7 +6570,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: *a17
+                          enum: *a19
                           description: Invoice item type
                           example: appointment
                         typeId:
@@ -6571,7 +6642,7 @@ paths:
                     items:
                       type: string
                     description: Invoice provider numbers
-                    example: *a18
+                    example: *a20
                   isArchived:
                     type: boolean
                     nullable: true
@@ -6932,7 +7003,7 @@ paths:
                           items:
                             type: number
                           description: The id list of services the waitlist item is waiting for
-                          example: &a19
+                          example: &a21
                             - 1
                             - 2
                             - 3
@@ -6941,7 +7012,7 @@ paths:
                           items:
                             type: string
                           description: Preferred days of the waitlist item
-                          example: &a20
+                          example: &a22
                             - Monday
                             - Tuesday
                         preferredTime:
@@ -6950,7 +7021,7 @@ paths:
                           items:
                             type: string
                           description: Preferred time of service for the waitlist item
-                          example: &a21
+                          example: &a23
                             - morning
                             - afternoon
                             - evening
@@ -6960,7 +7031,7 @@ paths:
                           items:
                             type: string
                           description: The waitlist tag ids of the waitlist item
-                          example: &a22
+                          example: &a24
                             - High
                             - Medium
                             - Low
@@ -7060,27 +7131,27 @@ paths:
                     items:
                       type: number
                     description: The id list of services the waitlist item is waiting for
-                    example: *a19
+                    example: *a21
                   preferredDays:
                     type: array
                     items:
                       type: string
                     description: Preferred days of the waitlist item
-                    example: *a20
+                    example: *a22
                   preferredTime:
                     type: array
                     nullable: true
                     items:
                       type: string
                     description: Preferred time of service for the waitlist item
-                    example: *a21
+                    example: *a23
                   waitlistTags:
                     type: array
                     nullable: true
                     items:
                       type: string
                     description: The waitlist tag ids of the waitlist item
-                    example: *a22
+                    example: *a24
                   archived:
                     type: boolean
                     nullable: true
@@ -7255,7 +7326,7 @@ paths:
                           items:
                             type: string
                           description: The screener tag ids of the screener item
-                          example: &a23
+                          example: &a25
                             - High
                             - Medium
                             - Low
@@ -7346,7 +7417,7 @@ paths:
                     items:
                       type: string
                     description: The screener tag ids of the screener item
-                    example: *a23
+                    example: *a25
                   archived:
                     type: boolean
                     nullable: true
@@ -7514,7 +7585,7 @@ paths:
                           example: 1
                         status:
                           type: string
-                          enum: &a24
+                          enum: &a26
                             - Incomplete
                             - In progress
                             - Completed
@@ -7654,7 +7725,7 @@ paths:
                     example: 1
                   status:
                     type: string
-                    enum: *a24
+                    enum: *a26
                     description: Status
                     example: Completed
                   templateId:
@@ -7859,7 +7930,7 @@ paths:
                           example: Notes
                         trackType:
                           type: string
-                          enum: &a25
+                          enum: &a27
                             - Appointments
                             - Hours
                             - Budget
@@ -7900,7 +7971,7 @@ paths:
                                 example: 1
                               type:
                                 type: string
-                                enum: &a26
+                                enum: &a28
                                   - Appointment
                                   - SupportActivity
                                   - File
@@ -8069,7 +8140,7 @@ paths:
                     example: Notes
                   trackType:
                     type: string
-                    enum: *a25
+                    enum: *a27
                     description: Track type
                     example: Budget
                   hours:
@@ -8107,7 +8178,7 @@ paths:
                           example: 1
                         type:
                           type: string
-                          enum: *a26
+                          enum: *a28
                           description: Item type
                           example: Appointment
                       required:
@@ -8253,7 +8324,7 @@ paths:
         - schema:
             type: string
             nullable: true
-            enum: &a27
+            enum: &a29
               - Sent
               - Viewed
             default: null
@@ -8315,7 +8386,7 @@ paths:
                         sentStatus:
                           type: string
                           nullable: true
-                          enum: *a27
+                          enum: *a29
                           default: null
                           description: Credit note status
                           example: Sent
@@ -8383,7 +8454,7 @@ paths:
                               - invoiceId
                               - paymentId
                               - amount
-                          default: &a28 []
+                          default: &a30 []
                         description:
                           type: string
                           nullable: true
@@ -8499,7 +8570,7 @@ paths:
                   sentStatus:
                     type: string
                     nullable: true
-                    enum: *a27
+                    enum: *a29
                     default: null
                     description: Credit note status
                     example: Sent
@@ -8567,7 +8638,7 @@ paths:
                         - invoiceId
                         - paymentId
                         - amount
-                    default: *a28
+                    default: *a30
                   description:
                     type: string
                     nullable: true
@@ -8864,7 +8935,7 @@ paths:
                               - invoiceId
                               - amount
                           description: Credit allocated to invoices
-                          example: &a29 []
+                          example: &a31 []
                         xeroId:
                           type: string
                           nullable: true
@@ -9079,7 +9150,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a29
+                    example: *a31
                   xeroId:
                     type: string
                     nullable: true
@@ -9220,7 +9291,7 @@ paths:
                         - invoiceId
                         - amount
                     description: Credit allocated to invoices
-                    example: *a29
+                    example: *a31
                   xeroId:
                     type: string
                     nullable: true
