@@ -4915,6 +4915,14 @@ paths:
           required: false
           name: busyTimeTypeId
           in: query
+        - schema:
+            type: number
+            nullable: true
+            description: Search for busy times with this practitioner id
+            example: 1
+          required: false
+          name: practitionerId
+          in: query
       responses:
         "200":
           description: A paged array of busy-times
