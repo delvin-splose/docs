@@ -3837,6 +3837,14 @@ paths:
           name: patientId
           in: query
         - schema:
+            type: number
+            nullable: true
+            description: Search for appointments with this practitioner id
+            example: 1
+          required: false
+          name: practitionerId
+          in: query
+        - schema:
             type: string
             nullable: true
             enum: &a12
@@ -7318,6 +7326,7 @@ paths:
                           example: true
                         formId:
                           type: number
+                          nullable: true
                           description: The form template id in which the screener item is created from
                           example: 1
                         screenerTags:
@@ -7409,6 +7418,7 @@ paths:
                     example: true
                   formId:
                     type: number
+                    nullable: true
                     description: The form template id in which the screener item is created from
                     example: 1
                   screenerTags:
