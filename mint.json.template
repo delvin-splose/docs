@@ -13,14 +13,6 @@
     "name": "Login",
     "url": "https://splose.com/login"
   },
-  "anchors": [
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://splose.com/blog",
-      "color": "#216947"
-    }
-  ],
   "navigation": [
     {
       "group": "Get started",
