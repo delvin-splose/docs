@@ -232,7 +232,8 @@
   },
   "contextual": {
     "options": [
-      "download-spec"
+      "download-spec",
+      "copy"
     ],
     "display": "header"
   }
