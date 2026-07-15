@@ -229,5 +229,11 @@
     "intercom": {
       "appId": "jm8wlq1m"
     }
+  },
+  "contextual": {
+    "options": [
+      "download-spec"
+    ],
+    "display": "header"
   }
 }
